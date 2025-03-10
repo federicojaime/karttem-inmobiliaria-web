@@ -1,5 +1,5 @@
 // src/components/home/ContactCTA.tsx
-import { Phone, MessageCircle } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { motion } from 'framer-motion';
 

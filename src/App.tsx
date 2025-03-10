@@ -78,7 +78,7 @@ const ScrollToTopButton = () => {
   );
 };
 
-// Componente para la notificación de cookies
+/* Componente para la notificación de cookies
 const CookieConsent = () => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -133,10 +133,10 @@ const CookieConsent = () => {
       )}
     </motion.div>
   );
-};
+};*/
 
 // Componente para la pantalla de carga
-const LoadingScreen = ({ isLoading }) => {
+const LoadingScreen = ({ isLoading }: { isLoading: boolean }) => {
   return (
     <motion.div
       className="fixed inset-0 bg-black z-50 flex items-center justify-center"

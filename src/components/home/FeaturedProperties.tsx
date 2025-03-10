@@ -1,7 +1,6 @@
 // src/components/home/FeaturedProperties.tsx
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import api, { Property } from '../../services/api';
 import { Button } from '../ui/Button';
@@ -11,7 +10,7 @@ export const FeaturedProperties = () => {
   const [saleProperties, setSaleProperties] = useState<Property[]>([]);
   const [rentProperties, setRentProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<number[]>([]);
 
   // Cargar propiedades
@@ -126,7 +125,16 @@ export const FeaturedProperties = () => {
             {properties.slice(0, 3).map((property, index) => (
               <PropertyCard
                 key={property.id}
-                property={property}
+                property={{
+                  ...property,
+                  price_ars: property.price_ars === null ? '' : property.price_ars,
+                  bedrooms: property.bedrooms === null ? 0 : property.bedrooms,
+                  bathrooms: property.bathrooms === null ? 0 : property.bathrooms,
+                  covered_area: property.covered_area?.toString() || '0',
+                  total_area: property.total_area?.toString() || undefined,
+                  main_image: property.main_image || '',
+                  featured: property.featured ? 1 : undefined
+                }}
                 index={index}
                 isFavorite={favorites.includes(property.id)}
                 onToggleFavorite={toggleFavorite}
@@ -172,7 +180,7 @@ export const FeaturedProperties = () => {
       />
 
       {/* Sección de propiedades aleatorias */}
-      <PropertySection 
+      <PropertySection
         title="Propiedades Destacadas"
         subtitle="Explora nuestra selección de propiedades destacadas en diversas categorías."
         accentColor="bg-primary"

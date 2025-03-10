@@ -1,5 +1,5 @@
 // src/pages/Contact.tsx
-import React from 'react';
+declare module 'react-helmet';
 import { motion } from 'framer-motion';
 import { ContactSection } from '../components/contact/ContactSection';
 import { Helmet } from 'react-helmet';

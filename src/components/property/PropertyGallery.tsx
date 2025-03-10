@@ -26,7 +26,7 @@ export const PropertyGallery = ({
   const [touchStart, setTouchStart] = useState(0);
   const [carouselMode, setCarouselMode] = useState(false);
   const [showControls, setShowControls] = useState(true);
-  const controlTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const controlTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   
   // Adjust view based on screen size

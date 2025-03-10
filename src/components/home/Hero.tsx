@@ -1,7 +1,7 @@
 // src/components/home/Hero.tsx
 import { motion } from 'framer-motion';
 import { Button } from '../ui/Button';
-import { Search, MapPin, Home, Building2 } from 'lucide-react';
+import { Search} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Hero = () => {

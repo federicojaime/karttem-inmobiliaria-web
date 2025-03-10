@@ -1,5 +1,6 @@
 // src/components/property/PropertyMap.tsx
-import { useState, useEffect } from 'react';
+declare module 'leaflet';
+import { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Button } from '../ui/Button';
@@ -28,7 +29,7 @@ interface PropertyMapProps {
 
 export const PropertyMap = ({ latitude, longitude, title, address }: PropertyMapProps) => {
   const [mapType, setMapType] = useState<'standard' | 'satellite'>('standard');
-  
+
   // Map URLs
   const mapUrls = {
     standard: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -45,13 +46,13 @@ export const PropertyMap = ({ latitude, longitude, title, address }: PropertyMap
 
   return (
     <div className="relative h-[400px] rounded-lg overflow-hidden border border-border">
-      <MapContainer 
-        center={[latitude, longitude]} 
-        zoom={15} 
+      <MapContainer
+        center={[latitude, longitude] as [number, number]}
+        zoom={15}
         style={{ height: '100%', width: '100%' }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution={'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' as any}
           url={mapUrls[mapType]}
         />
         <Marker position={[latitude, longitude]}>
@@ -63,11 +64,11 @@ export const PropertyMap = ({ latitude, longitude, title, address }: PropertyMap
           </Popup>
         </Marker>
       </MapContainer>
-      
+
       <div className="absolute top-3 right-3 z-[1000]">
-        <Button 
-          size="sm" 
-          variant="secondary" 
+        <Button
+          size="sm"
+          variant="secondary"
           onClick={() => setMapType(mapType === 'standard' ? 'satellite' : 'standard')}
         >
           <Layers className="h-4 w-4 mr-2" />

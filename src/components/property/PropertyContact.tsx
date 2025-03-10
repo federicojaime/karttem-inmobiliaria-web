@@ -1,6 +1,6 @@
 // src/components/property/PropertyContact.tsx
 import { useState } from 'react';
-import { Phone, Send, Loader2 } from 'lucide-react';
+import { Send, Loader2 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Property } from '../../services/api';
 

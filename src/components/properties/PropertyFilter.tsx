@@ -1,6 +1,6 @@
 // src/components/properties/PropertyFilter.tsx
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { Search, Sliders, Check } from 'lucide-react';
+import { Search, Sliders } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { PropertyType } from '../../services/api';
 
@@ -16,7 +16,7 @@ export const PropertyFilter = ({ filters, onFilterChange, propertyTypes }: Prope
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setLocalFilters(prev => ({ ...prev, [name]: value }));
+    setLocalFilters((prev: Record<string, string>) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: FormEvent) => {

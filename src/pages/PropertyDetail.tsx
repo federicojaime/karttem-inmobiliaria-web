@@ -101,7 +101,7 @@ export const PropertyDetail = () => {
   };
 
   // Obtener el nombre legible de la provincia a partir del ID
-  const getProvinceName = (provinceId) => {
+  const getProvinceName = (provinceId: string) => {
     // Buscar la provincia en el array de PROVINCES
     const province = PROVINCES.find(p => p.id === provinceId);
     // Si se encuentra, devolver su nombre, de lo contrario devolver el ID
@@ -112,15 +112,15 @@ export const PropertyDetail = () => {
     <div className="container mx-auto px-4 py-12">
       {/* Botón volver a propiedades */}
       <div className="mb-6">
-        <Link 
-          to="/properties" 
+        <Link
+          to="/properties"
           className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Volver a propiedades
         </Link>
       </div>
-      
+
       {/* Título y detalles principales de la propiedad */}
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
         <div className="w-full">
@@ -132,25 +132,30 @@ export const PropertyDetail = () => {
                 {property.address}, {property.city}, {getProvinceName(property.province)}
               </span>
             </div>
-            
+
             <div className="flex items-center">
               <Building className="h-4 w-4 mr-1 flex-shrink-0" />
               <span>{property.type_name || property.type}</span>
             </div>
-            
+
             <div className="flex items-center">
               <CalendarClock className="h-4 w-4 mr-1 flex-shrink-0" />
               <span>Publicado: {new Date(property.created_at).toLocaleDateString()}</span>
             </div>
           </div>
         </div>
-        
+
         {/* Botones de acción pueden ir aquí si necesitas añadirlos */}
       </div>
-      
+
       {/* Galería de imágenes */}
-      <PropertyGallery images={property.images} title={property.title} />
-      
+      <PropertyGallery
+        images={property.images.map(img => ({
+          id: String(img.id),
+          image_url: img.image_url
+        }))}
+        title={property.title}
+      />
       {/* Contenido principal y sidebar */}
       <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Columna principal */}
@@ -161,25 +166,25 @@ export const PropertyDetail = () => {
               <p>{property.description}</p>
             </div>
           </div>
-          
+
           <div>
             <h2 className="text-2xl font-semibold mb-4">Características y Amenities</h2>
             <PropertyFeatures property={property} />
           </div>
-          
+
           {(property.latitude && property.longitude) && (
             <div>
               <h2 className="text-2xl font-semibold mb-4">Ubicación</h2>
-              <PropertyMap 
-                latitude={property.latitude} 
-                longitude={property.longitude} 
-                title={property.title} 
+              <PropertyMap
+                latitude={property.latitude}
+                longitude={property.longitude}
+                title={property.title}
                 address={`${property.address}, ${property.city}, ${getProvinceName(property.province)}`}
               />
             </div>
           )}
         </div>
-        
+
         {/* Sidebar */}
         <div className="space-y-6">
           <div className="bg-card rounded-lg shadow p-6">
@@ -194,32 +199,32 @@ export const PropertyDetail = () => {
                 </div>
               )}
             </div>
-            
+
             <div className="text-3xl font-bold mb-4">
               {getPriceText()}
             </div>
-            
+
             {/* Botones de acción */}
             <div className="grid grid-cols-2 gap-3 mt-6">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="flex items-center justify-center"
-                onClick={() => {/* Lógica para guardar */}}
+                onClick={() => {/* Lógica para guardar */ }}
               >
                 <Heart className="h-4 w-4 mr-2" />
                 Guardar
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="flex items-center justify-center"
-                onClick={() => {/* Lógica para compartir */}}
+                onClick={() => {/* Lógica para compartir */ }}
               >
                 <Share className="h-4 w-4 mr-2" />
                 Compartir
               </Button>
             </div>
           </div>
-          
+
           {/* Componente de contacto */}
           <PropertyContact property={property} />
         </div>
