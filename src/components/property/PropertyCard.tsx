@@ -69,7 +69,9 @@ export const PropertyCard = ({
       return imageUrl;
     }
     
-    return `http://localhost/inmobiliaria-api/${imageUrl}`;
+    //return `http://localhost/inmobiliaria-api/${imageUrl}`;
+    return `https://codeo.site/api-karttem/${imageUrl}`;
+
   };
 
   return (

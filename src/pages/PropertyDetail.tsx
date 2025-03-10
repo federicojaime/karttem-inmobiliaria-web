@@ -85,12 +85,17 @@ export const PropertyDetail = () => {
     'rented': 'Alquilado'
   }[property.status] || property.status;
 
+  // Formatear número con separadores de miles adecuados
+  const formatNumber = (num: number): string => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   // Price text
   const getPriceText = () => {
     if (property.price_ars) {
-      return `$${property.price_ars.toLocaleString()}`;
+      return `$${formatNumber(property.price_ars)}`;
     } else if (property.price_usd) {
-      return `U$D ${property.price_usd.toLocaleString()}`;
+      return `U$D ${formatNumber(property.price_usd)}`;
     }
     return 'Consultar';
   };

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost/inmobiliaria-api';
+//const API_URL = 'http://localhost/inmobiliaria-api';
+const API_URL = 'https://codeo.site/api-karttem';
 
 export interface Property {
   id: number;

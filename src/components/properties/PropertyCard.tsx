@@ -5,7 +5,8 @@ import { Property } from '../../services/api';
 import { Button } from '../ui/Button';
 
 // URL base para las imágenes
-const API_BASE_URL = 'http://localhost/inmobiliaria-api';
+//const API_BASE_URL = 'http://localhost/inmobiliaria-api';
+const API_BASE_URL = 'https://codeo.site/api-karttem';
 
 interface PropertyCardProps {
   property: Property;
@@ -28,12 +29,17 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     return `${API_BASE_URL}/${imageUrl}`;
   };
 
+  // Formatear número con separadores de miles adecuados
+  const formatNumber = (num: number): string => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   // Obtener el texto del precio
   const getPriceText = () => {
     if (property.price_ars) {
-      return `$${property.price_ars.toLocaleString()}`;
+      return `$${formatNumber(property.price_ars)}`;
     } else if (property.price_usd) {
-      return `U$D ${property.price_usd.toLocaleString()}`;
+      return `U$D ${formatNumber(property.price_usd)}`;
     }
     return 'Consultar';
   };

@@ -4,7 +4,8 @@ import { ChevronLeft, ChevronRight, X, Heart, Camera, Share2 } from 'lucide-reac
 import { motion, AnimatePresence } from 'framer-motion';
 
 // API base URL
-const API_BASE_URL = 'http://localhost/inmobiliaria-api';
+// const API_BASE_URL = 'http://localhost/inmobiliaria-api';
+const API_BASE_URL = 'https://codeo.site/api-karttem';
 
 interface PropertyGalleryProps {
   images: Array<{ id: string; image_url: string; }>;
