@@ -178,7 +178,7 @@ function App() {
   }, []);
 
   return (
-    <Router>
+    <Router basename="/karttem-web">
       <ScrollToTop />
 
       {/* Pantalla de carga inicial */}
@@ -230,8 +230,8 @@ function App() {
         </a>
       </motion.div>
 
-      {/* Notificación de cookies */}
-      <CookieConsent />
+      {/* Notificación de cookies 
+      <CookieConsent />*/}
     </Router>
   );
 }
