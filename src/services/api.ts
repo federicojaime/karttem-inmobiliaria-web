@@ -85,7 +85,7 @@ const api = {
   },
   
   getFeaturedProperties: async (): Promise<ApiResponse<Property[]>> => {
-    const response = await axios.get(`${API_URL}/properties/featured`);
+    const response = await axios.get(`${API_URL}/properties/public`);
     return response.data;
   },
   

@@ -60,6 +60,8 @@ export const Properties = () => {
                 });
 
                 if (response.ok) {
+                    console.log('Propiedades cargadas:', response.data);
+
                     setProperties(response.data);
                     // For pagination - this would be handled differently with a real API that returns pagination info
                     setTotalPages(Math.ceil(response.data.length / 12));
@@ -115,7 +117,7 @@ export const Properties = () => {
                         </div>
                     ) : (
                         <>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">// src/pages/Properties.tsx (continuación)
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {properties.map(property => (
                                     <PropertyCard key={property.id} property={property} />
                                 ))}

@@ -47,7 +47,7 @@ import {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
           {mainFeatures.map((feature, index) => (
             feature.value !== null && feature.value !== undefined && (
-              <div key={index} className="bg-secondary p-4 rounded-lg text-center">
+              <div key={index} className="bg-secondary text-white p-4 rounded-lg text-center">
                 <div className="flex justify-center mb-2">{feature.icon}</div>
                 <p className="font-semibold">{feature.value}</p>
                 <p className="text-sm text-muted-foreground">{feature.name}</p>

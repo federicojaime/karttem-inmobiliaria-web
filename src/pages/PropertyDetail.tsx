@@ -9,6 +9,7 @@ import { PropertyGallery } from '../components/property/PropertyGallery';
 import { PropertyFeatures } from '../components/property/PropertyFeatures';
 import { PropertyMap } from '../components/property/PropertyMap';
 import { PropertyContact } from '../components/property/PropertyContact';
+import { PROVINCES } from '../data/locations'; // Importar la lista de provincias
 
 export const PropertyDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -94,8 +95,17 @@ export const PropertyDetail = () => {
     return 'Consultar';
   };
 
+  // Obtener el nombre legible de la provincia a partir del ID
+  const getProvinceName = (provinceId) => {
+    // Buscar la provincia en el array de PROVINCES
+    const province = PROVINCES.find(p => p.id === provinceId);
+    // Si se encuentra, devolver su nombre, de lo contrario devolver el ID
+    return province ? province.name : provinceId;
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
+      {/* Botón volver a propiedades */}
       <div className="mb-6">
         <Link 
           to="/properties" 
@@ -106,42 +116,39 @@ export const PropertyDetail = () => {
         </Link>
       </div>
       
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-3xl font-bold">{property.title}</h1>
-          <div className="flex flex-wrap items-center mt-2 text-muted-foreground gap-2">
-            <span className="flex items-center">
-              <MapPin className="h-4 w-4 mr-1" />
-              {property.address}, {property.city}, {property.province}
-            </span>
+      {/* Título y detalles principales de la propiedad */}
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+        <div className="w-full">
+          <h1 className="text-3xl font-bold break-words">{property.title}</h1>
+          <div className="flex flex-wrap items-center mt-3 text-muted-foreground gap-3">
+            <div className="flex items-center">
+              <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+              <span className="truncate">
+                {property.address}, {property.city}, {getProvinceName(property.province)}
+              </span>
+            </div>
             
-            <span className="flex items-center ml-4">
-              <Building className="h-4 w-4 mr-1" />
-              {property.type_name || property.type}
-            </span>
+            <div className="flex items-center">
+              <Building className="h-4 w-4 mr-1 flex-shrink-0" />
+              <span>{property.type_name || property.type}</span>
+            </div>
             
-            <span className="flex items-center ml-4">
-              <CalendarClock className="h-4 w-4 mr-1" />
-              Publicado: {new Date(property.created_at).toLocaleDateString()}
-            </span>
+            <div className="flex items-center">
+              <CalendarClock className="h-4 w-4 mr-1 flex-shrink-0" />
+              <span>Publicado: {new Date(property.created_at).toLocaleDateString()}</span>
+            </div>
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Heart className="h-4 w-4 mr-2" />
-            Guardar
-          </Button>
-          <Button variant="outline" size="sm">
-            <Share className="h-4 w-4 mr-2" />
-            Compartir
-          </Button>
-        </div>
+        {/* Botones de acción pueden ir aquí si necesitas añadirlos */}
       </div>
       
+      {/* Galería de imágenes */}
       <PropertyGallery images={property.images} title={property.title} />
       
+      {/* Contenido principal y sidebar */}
       <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Columna principal */}
         <div className="md:col-span-2 space-y-10">
           <div>
             <h2 className="text-2xl font-semibold mb-4">Descripción</h2>
@@ -162,12 +169,13 @@ export const PropertyDetail = () => {
                 latitude={property.latitude} 
                 longitude={property.longitude} 
                 title={property.title} 
-                address={property.address}
+                address={`${property.address}, ${property.city}, ${getProvinceName(property.province)}`}
               />
             </div>
           )}
         </div>
         
+        {/* Sidebar */}
         <div className="space-y-6">
           <div className="bg-card rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-4">
@@ -186,14 +194,28 @@ export const PropertyDetail = () => {
               {getPriceText()}
             </div>
             
-            {(property.owner && property.owner.name) && (
-              <div className="pt-4 border-t border-border">
-                <p className="text-sm text-muted-foreground">Propietario:</p>
-                <p className="font-medium">{property.owner.name}</p>
-              </div>
-            )}
+            {/* Botones de acción */}
+            <div className="grid grid-cols-2 gap-3 mt-6">
+              <Button 
+                variant="outline" 
+                className="flex items-center justify-center"
+                onClick={() => {/* Lógica para guardar */}}
+              >
+                <Heart className="h-4 w-4 mr-2" />
+                Guardar
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex items-center justify-center"
+                onClick={() => {/* Lógica para compartir */}}
+              >
+                <Share className="h-4 w-4 mr-2" />
+                Compartir
+              </Button>
+            </div>
           </div>
           
+          {/* Componente de contacto */}
           <PropertyContact property={property} />
         </div>
       </div>

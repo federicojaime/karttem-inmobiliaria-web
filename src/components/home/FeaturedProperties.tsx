@@ -2,22 +2,36 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Bed, Bath, Square, MapPin } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import api, { Property } from '../../services/api';
 import { Button } from '../ui/Button';
+import { PropertyCard } from '../property/PropertyCard';
 
 export const FeaturedProperties = () => {
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [saleProperties, setSaleProperties] = useState<Property[]>([]);
+  const [rentProperties, setRentProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [favorites, setFavorites] = useState<number[]>([]);
 
+  // Cargar propiedades
   useEffect(() => {
-    const fetchFeaturedProperties = async () => {
+    const fetchProperties = async () => {
       try {
         setLoading(true);
         const response = await api.getFeaturedProperties();
         if (response.ok) {
-          setProperties(response.data.slice(0, 4)); // Limitar a 4 propiedades destacadas
+          // Filtrar propiedades por estado
+          const salesProps = response.data
+            .filter(prop => prop.status === 'sale')
+            .slice(0, 5);
+
+          const rentProps = response.data
+            .filter(prop => prop.status === 'rent' || prop.status === 'temporary_rent')
+            .slice(0, 5);
+
+          setSaleProperties(salesProps);
+          setRentProperties(rentProps);
         } else {
           setError(response.msg);
         }
@@ -29,115 +43,145 @@ export const FeaturedProperties = () => {
       }
     };
 
-    fetchFeaturedProperties();
+    fetchProperties();
+
+    // Cargar favoritos desde localStorage
+    const savedFavorites = localStorage.getItem('favorites');
+    if (savedFavorites) {
+      setFavorites(JSON.parse(savedFavorites));
+    }
   }, []);
 
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-center">Propiedades Destacadas</h2>
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {[...Array(4)].map((_, index) => (
-            <div key={index} className="rounded-lg overflow-hidden bg-muted animate-pulse h-80" />
-          ))}
-        </div>
-      </div>
-    );
-  }
+  // Manejar favoritos
+  const toggleFavorite = (id: number) => {
+    let newFavorites;
+    if (favorites.includes(id)) {
+      newFavorites = favorites.filter(favId => favId !== id);
+    } else {
+      newFavorites = [...favorites, id];
+    }
+    setFavorites(newFavorites);
+    localStorage.setItem('favorites', JSON.stringify(newFavorites));
+  };
 
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="bg-destructive/10 p-4 rounded-lg">
-          <p className="text-center text-destructive">{error}</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="container mx-auto px-4 py-16">
-      <h2 className="text-3xl font-bold text-center">Propiedades Destacadas</h2>
-      <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
-        Descubre nuestra selección de propiedades destacadas en las mejores ubicaciones de San Luis.
-      </p>
-      
-      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {properties.map((property, index) => (
-          <motion.div
-            key={property.id}
-            className="group bg-card rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+  // Componente de sección de propiedades
+  const PropertySection = ({
+    title,
+    subtitle,
+    accentColor,
+    properties,
+    viewAllLink,
+    viewAllText,
+    backgroundColor = "bg-white"
+  }: {
+    title: string;
+    subtitle: string;
+    accentColor: string;
+    properties: Property[];
+    viewAllLink: string;
+    viewAllText: string;
+    backgroundColor?: string;
+  }) => (
+    <section className={`py-16 ${backgroundColor}`}>
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8">
+          <div className="mb-4 md:mb-0">
+            <h2 className="text-3xl font-bold text-black">{title}</h2>
+            <div className={`h-1 w-24 ${accentColor} my-3`}></div>
+            <p className="text-gray-600 max-w-2xl">
+              {subtitle}
+            </p>
+          </div>
+          <Link
+            to={viewAllLink}
+            className="group hidden md:flex items-center text-primary font-medium hover:text-amber-600 transition-colors"
           >
-            <Link to={`/property/${property.id}`} className="block">
-              <div className="relative h-48 w-full overflow-hidden">
-                <img 
-                  src={property.main_image || '/placeholder-property.jpg'} 
-                  alt={property.title}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-                <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-2 py-1 rounded-md text-sm font-medium">
-                  {property.status === 'sale' ? 'Venta' : 
-                   property.status === 'rent' ? 'Alquiler' : 
-                   property.status === 'temporary_rent' ? 'Alquiler temporario' : 
-                   property.status}
-                </div>
-              </div>
-              
-              <div className="p-4">
-                <h3 className="text-lg font-semibold line-clamp-1 group-hover:text-primary transition-colors">
-                  {property.title}
-                </h3>
-                
-                <div className="mt-2 flex items-center text-sm text-muted-foreground">
-                  <MapPin className="h-4 w-4 mr-1" />
-                  <span className="line-clamp-1">{property.address}, {property.city}, {property.province}</span>
-                </div>
-                
-                <div className="mt-4 flex justify-between items-center">
-                  <div className="font-bold text-lg">
-                    {property.price_ars ? `$${property.price_ars.toLocaleString()}` : 
-                     property.price_usd ? `U$D ${property.price_usd.toLocaleString()}` : 
-                     'Consultar'}
-                  </div>
-                  
-                  <div className="flex space-x-3 text-sm text-muted-foreground">
-                    {property.bedrooms && (
-                      <div className="flex items-center">
-                        <Bed className="h-4 w-4 mr-1" />
-                        <span>{property.bedrooms}</span>
-                      </div>
-                    )}
-                    
-                    {property.bathrooms && (
-                      <div className="flex items-center">
-                        <Bath className="h-4 w-4 mr-1" />
-                        <span>{property.bathrooms}</span>
-                      </div>
-                    )}
-                    
-                    <div className="flex items-center">
-                      <Square className="h-4 w-4 mr-1" />
-                      <span>{property.covered_area}m²</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </motion.div>
-        ))}
-      </div>
-      
-      <div className="mt-12 text-center">
-        <Button asChild>
-          <Link to="/properties">
-            Ver todas las propiedades
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <span>{viewAllText}</span>
+            <ArrowRight className="ml-1 h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
           </Link>
-        </Button>
+        </div>
+
+        {/* Mensaje de carga */}
+        {loading && (
+          <div className="flex justify-center items-center py-16">
+            <div className={`animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 ${accentColor}`}></div>
+          </div>
+        )}
+
+        {/* Mensaje si no hay propiedades */}
+        {!loading && properties.length === 0 && (
+          <div className={`${backgroundColor === 'bg-white' ? 'bg-gray-50' : 'bg-white'} rounded-xl py-12 text-center`}>
+            <div className="max-w-md mx-auto">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No hay propiedades disponibles</h3>
+              <p className="text-gray-500 mb-6">
+                Actualmente no hay propiedades destacadas en esta categoría. Por favor, consulta más tarde.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Grid de propiedades - Ahora uniforme con 3 columnas como máximo */}
+        {!loading && properties.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {properties.slice(0, 3).map((property, index) => (
+              <PropertyCard
+                key={property.id}
+                property={property}
+                index={index}
+                isFavorite={favorites.includes(property.id)}
+                onToggleFavorite={toggleFavorite}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Botón mobile para ver todas */}
+        <div className="mt-8 text-center md:hidden">
+          <Button asChild>
+            <Link to={viewAllLink}>
+              {viewAllText}
+            </Link>
+          </Button>
+        </div>
       </div>
+    </section>
+  );
+
+  // Renderizado principal
+  return (
+    <div className="bg-white">
+      {/* Propiedades en Venta */}
+      <PropertySection
+        title="Propiedades en Venta"
+        subtitle="Descubre nuestra selección de propiedades destacadas a la venta en las mejores ubicaciones."
+        accentColor="bg-amber-400"
+        properties={saleProperties}
+        viewAllLink="/properties?estado=sale"
+        viewAllText="Ver todas las propiedades en venta"
+      />
+
+      {/* Propiedades en Alquiler */}
+      <PropertySection
+        title="Propiedades en Alquiler"
+        subtitle="Encuentra tu próximo hogar con nuestra selección de propiedades destacadas en alquiler."
+        accentColor="bg-blue-500"
+        properties={rentProperties}
+        viewAllLink="/properties?estado=rent"
+        viewAllText="Ver todas las propiedades en alquiler"
+        backgroundColor="bg-gray-50"
+      />
+
+      {/* Sección de propiedades aleatorias */}
+      <PropertySection 
+        title="Propiedades Destacadas"
+        subtitle="Explora nuestra selección de propiedades destacadas en diversas categorías."
+        accentColor="bg-primary"
+        properties={[...saleProperties, ...rentProperties]
+          .sort(() => Math.random() - 0.5) // Mezclar aleatoriamente
+          .slice(0, 3)} // Tomar solo 3
+        viewAllLink="/properties"
+        viewAllText="Ver todas las propiedades"
+      />
     </div>
   );
 };
