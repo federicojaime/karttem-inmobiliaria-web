@@ -47,22 +47,22 @@ export const ContactSection = () => {
         {
             icon: <MapPin className="h-6 w-6" />,
             title: 'Dirección',
-            details: ['Av. San Martín 1250', 'San Luis, Argentina']
+            details: ['Colón 647', 'San Luis, Argentina']
         },
         {
             icon: <Phone className="h-6 w-6" />,
             title: 'Teléfonos',
-            details: ['+54 266 442-5588', '+54 266 15-456-7890']
+            details: ['+54 9 2664 46-3038', '+54 9 266 4424950']
         },
         {
             icon: <Mail className="h-6 w-6" />,
             title: 'Email',
-            details: ['info@karttem.com', 'ventas@karttem.com']
+            details: ['karttem@gmail.com', 'karttemsa@gmail.com']
         },
         {
             icon: <Clock className="h-6 w-6" />,
             title: 'Horario de Atención',
-            details: ['Lunes a Viernes: 9:00 - 18:00', 'Sábados: 9:00 - 13:00']
+            details: ['Lunes a Viernes: de 8:30 - 12:30 y de 16:30 - 20:30', 'Sábados: 9:00 - 12:00']
         }
     ];
 

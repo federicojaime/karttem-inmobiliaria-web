@@ -110,7 +110,6 @@ export const PropertyFilter = ({ filters, onFilterChange, propertyTypes }: Prope
             <option value="">Todas</option>
             <option value="sale">Venta</option>
             <option value="rent">Alquiler</option>
-            <option value="temporary_rent">Alquiler temporario</option>
           </select>
         </div>
         

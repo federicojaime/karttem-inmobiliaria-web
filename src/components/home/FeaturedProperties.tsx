@@ -158,7 +158,7 @@ export const FeaturedProperties = () => {
   // Renderizado principal
   return (
     <div className="bg-white">
-      {/* Propiedades en Venta */}
+      {/* Propiedades en Venta 
       <PropertySection
         title="Propiedades en Venta"
         subtitle="Descubre nuestra selección de propiedades destacadas a la venta en las mejores ubicaciones."
@@ -168,7 +168,7 @@ export const FeaturedProperties = () => {
         viewAllText="Ver todas las propiedades en venta"
       />
 
-      {/* Propiedades en Alquiler */}
+      {/* Propiedades en Alquiler 
       <PropertySection
         title="Propiedades en Alquiler"
         subtitle="Encuentra tu próximo hogar con nuestra selección de propiedades destacadas en alquiler."

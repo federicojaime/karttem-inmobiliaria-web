@@ -80,7 +80,7 @@ export const Contact = () => {
               
               <div className="mt-8 flex justify-center space-x-6">
                 <a 
-                  href="https://www.facebook.com/KarttemSA" 
+                  href="https://www.facebook.com/share/1E3ffJnabQ/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"

@@ -40,11 +40,12 @@ export const Navbar = () => {
             <div className="flex space-x-4">
               <div className="flex items-center text-white text-xs">
                 <MapPin className="h-3 w-3 mr-1 text-primary" />
-                <span>Av. Presidente Illia 256, San Luis, Argentina</span>
+                <span>Colón 647, San Luis, Argentina</span>
               </div>
               <div className="flex items-center text-white text-xs">
                 <Clock className="h-3 w-3 mr-1 text-primary" />
-                <span>Lun - Vie: 9:00 - 18:00 | Sáb: 9:00 - 13:00</span>
+                <span>Lunes a viernes de 8:30 a 12:30 y de 16:30 a 20:30.
+                Sábados de 9:00 a 12:00</span>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -53,7 +54,7 @@ export const Navbar = () => {
                 className="flex items-center text-white text-xs hover:text-primary transition-colors"
               >
                 <Phone className="h-3 w-3 mr-1 text-primary" />
-                +54 9 2664 46-3038
+                +54 9 2664 424950
               </a>
               <Button 
                 size="sm" 
