@@ -1,9 +1,9 @@
 // src/components/common/Footer.tsx
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { Facebook, Instagram, Mail, Phone, MapPin, Clock } from 'lucide-react';
 import { Logo } from './Logo';
 import { Button } from '../ui/Button';
-
+import LogoCodeo from '../../assets/codeo-logo.png';
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -117,9 +117,27 @@ export const Footer = () => {
         </div>
 
         <div className="mt-12 border-t border-gray-800 pt-8">
-          <p className="text-center text-sm text-gray-400">
-            &copy; {currentYear} KARTTEM S.A. Inmobiliaria. Todos los derechos reservados.
-          </p>
+          <div className="flex flex-col md:flex-row items-center justify-center">
+            <p className="text-center text-sm text-gray-400">
+              &copy; {currentYear} KARTTEM S.A. Inmobiliaria.
+            </p>
+            <div className="flex items-center text-gray-400">
+              <span className="mx-2 hidden md:inline">|</span>
+              <span className="text-sm">Desarrollado por</span>
+              <a
+                href="https://codeo.site/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center ml-2 hover:opacity-80 transition-opacity"
+              >
+                <img
+                  src={LogoCodeo}
+                  alt="Codeo.Ar"
+                  className="h-5 w-auto"
+                />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </footer >

@@ -72,6 +72,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -99,8 +100,146 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* src/components/home/propertyMap.css */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  width: 280px !important;
+}
+
+.popup-content {
+  overflow: hidden;
+}
+
+.leaflet-container {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.leaflet-popup-close-button {
+  color: #000 !important;
+  opacity: 0.7;
+}
+
+.leaflet-popup-close-button:hover {
+  opacity: 1;
+}
+
+/* src/components/home/propertyMap.css */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  width: 280px !important;
+}
+
+.popup-content {
+  overflow: hidden;
+}
+
+.leaflet-container {
+  font-family: 'Montserrat', sans-serif;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1;
+  max-width: 100%;
+}
+
+.leaflet-popup-close-button {
+  color: #000 !important;
+  opacity: 0.7;
+}
+
+.leaflet-popup-close-button:hover {
+  opacity: 1;
+}
+
+/* Asegurar que el mapa no cause desbordamiento horizontal */
+.leaflet-control-container .leaflet-top,
+.leaflet-control-container .leaflet-bottom {
+  z-index: 10;
+}
+
+/* Arreglos para dispositivos móviles */
+@media (max-width: 768px) {
+  .leaflet-popup-content-wrapper {
+    max-width: 90vw;
+  }
+
+  .leaflet-popup-content {
+    width: auto !important;
+    max-width: 85vw;
+  }
+}
+
+/* src/components/home/propertyMap.css */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  width: 280px !important;
+}
+
+.popup-content {
+  overflow: hidden;
+}
+
+.leaflet-container {
+  font-family: 'Montserrat', sans-serif;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1;
+  max-width: 100%;
+}
+
+.leaflet-popup-close-button {
+  color: #000 !important;
+  opacity: 0.7;
+}
+
+.leaflet-popup-close-button:hover {
+  opacity: 1;
+}
+
+/* Asegurar que los controles personalizados aparezcan correctamente */
+.leaflet-control-container .leaflet-top,
+.leaflet-control-container .leaflet-bottom {
+  z-index: 900;
+}
+
+/* Estilo para botón de tipo de mapa */
+.leaflet-top.leaflet-right .leaflet-control.leaflet-bar {
+  clear: both;
+  margin-top: 20px;
+}
+
+/* Arreglos para dispositivos móviles */
+@media (max-width: 768px) {
+  .leaflet-popup-content-wrapper {
+    max-width: 90vw;
+  }
+
+  .leaflet-popup-content {
+    width: auto !important;
+    max-width: 85vw;
   }
 }
