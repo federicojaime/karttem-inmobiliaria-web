@@ -106,20 +106,6 @@ export const PropertyMap = () => {
         return `${API_BASE_URL}/${imageUrl}`;
     };
 
-    // Formatear número con separadores de miles
-    const formatNumber = (num: number): string => {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    };
-
-    // Obtener texto del precio
-    const getPriceText = (property: Property) => {
-        if (property.price_ars) {
-            return `$${formatNumber(property.price_ars)}`;
-        } else if (property.price_usd) {
-            return `U$D ${formatNumber(property.price_usd)}`;
-        }
-        return 'Consultar';
-    };
 
     // Obtener texto del estado
     const getStatusText = (status: string) => {

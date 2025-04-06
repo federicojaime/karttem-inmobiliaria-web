@@ -1,7 +1,7 @@
 // src/pages/PropertyDetail.tsx
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Tag, MapPin, Building, CalendarClock, Heart, Share } from 'lucide-react';
+import { ArrowLeft, Tag, MapPin, Building, CalendarClock } from 'lucide-react';
 import { Property } from '../services/api';
 import api from '../services/api';
 import { Button } from '../components/ui/Button';
@@ -9,6 +9,7 @@ import { PropertyGallery } from '../components/property/PropertyGallery';
 import { PropertyFeatures } from '../components/property/PropertyFeatures';
 import { PropertyMap } from '../components/property/PropertyMap';
 import { PropertyContact } from '../components/property/PropertyContact';
+import { SharePropertyMenu } from '../components/property/SharePropertyMenu';
 import { PROVINCES } from '../data/locations'; // Importar la lista de provincias
 import { getPropertyPrice } from '../utils/format';
 
@@ -36,10 +37,13 @@ export const PropertyDetail = () => {
       }
     };
 
+    
     if (id) {
       fetchProperty();
     }
   }, [id]);
+
+  
 
   if (loading) {
     return (
@@ -86,20 +90,7 @@ export const PropertyDetail = () => {
     'rented': 'Alquilado'
   }[property.status] || property.status;
 
-  // Formatear número con separadores de miles adecuados
-  const formatNumber = (num: number): string => {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  };
-
-  // Price text
-  const getPriceText = () => {
-    if (property.price_ars) {
-      return `$${formatNumber(property.price_ars)}`;
-    } else if (property.price_usd) {
-      return `U$D ${formatNumber(property.price_usd)}`;
-    }
-    return 'Consultar';
-  };
+  
 
   // Obtener el nombre legible de la provincia a partir del ID
   const getProvinceName = (provinceId: string) => {
@@ -122,112 +113,98 @@ export const PropertyDetail = () => {
         </Link>
       </div>
 
-      {/* Título y detalles principales de la propiedad */}
-      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
-        <div className="w-full">
-          <h1 className="text-3xl font-bold break-words">{property.title}</h1>
-          <div className="flex flex-wrap items-center mt-3 text-muted-foreground gap-3">
-            <div className="flex items-center">
-              <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
-              <span className="truncate">
-                {property.address}, {property.city}, {getProvinceName(property.province)}
-              </span>
-            </div>
-
-            <div className="flex items-center">
-              <Building className="h-4 w-4 mr-1 flex-shrink-0" />
-              <span>{property.type_name || property.type}</span>
-            </div>
-
-            <div className="flex items-center">
-              <CalendarClock className="h-4 w-4 mr-1 flex-shrink-0" />
-              <span>Publicado: {new Date(property.created_at).toLocaleDateString()}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Botones de acción pueden ir aquí si necesitas añadirlos */}
-      </div>
-
-      {/* Galería de imágenes */}
-      <PropertyGallery
-        images={property.images.map(img => ({
-          id: String(img.id),
-          image_url: img.image_url
-        }))}
-        title={property.title}
-      />
-      {/* Contenido principal y sidebar */}
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Columna principal */}
-        <div className="md:col-span-2 space-y-10">
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">Descripción</h2>
-            <div className="prose prose-stone max-w-none">
-              <p>{property.description}</p>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">Características y Amenities</h2>
-            <PropertyFeatures property={property} />
-          </div>
-
-          {(property.latitude && property.longitude) && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Ubicación</h2>
-              <PropertyMap
-                latitude={property.latitude}
-                longitude={property.longitude}
-                title={property.title}
-                address={`${property.address}, ${property.city}, ${getProvinceName(property.province)}`}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          <div className="bg-card rounded-lg shadow p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="inline-flex items-center bg-primary/10 text-yellow-700 px-3 py-1 rounded-full">
-                <Tag className="h-4 w-4 mr-1" />
-                {statusText}
+      {/* Contenido principal para generar PDF */}
+      <div id="property-detail">
+        {/* Título y detalles principales de la propiedad */}
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+          <div className="w-full">
+            <h1 className="text-3xl font-bold break-words">{property.title}</h1>
+            <div className="flex flex-wrap items-center mt-3 text-muted-foreground gap-3">
+              <div className="flex items-center">
+                <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+                <span className="truncate">
+                  {property.address}, {property.city}, {getProvinceName(property.province)}
+                </span>
               </div>
-              {(typeof property.featured === 'number' ? property.featured > 0 : property.featured) && (
-                <div className="inline-flex items-center bg-yellow-500/10 text-yellow-600 px-3 py-1 rounded-full">
-                  Destacada
-                </div>
-              )}
+
+              <div className="flex items-center">
+                <Building className="h-4 w-4 mr-1 flex-shrink-0" />
+                <span>{property.type_name || property.type}</span>
+              </div>
+
+              <div className="flex items-center">
+                <CalendarClock className="h-4 w-4 mr-1 flex-shrink-0" />
+                <span>Publicado: {new Date(property.created_at).toLocaleDateString()}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Galería de imágenes */}
+        <PropertyGallery
+          images={property.images.map(img => ({
+            id: String(img.id),
+            image_url: img.image_url
+          }))}
+          title={property.title}
+          property={property} // Añade la propiedad completa
+        />
+
+        {/* Contenido principal y sidebar */}
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Columna principal */}
+          <div className="md:col-span-2 space-y-10">
+            <div>
+              <h2 className="text-2xl font-semibold mb-4">Descripción</h2>
+              <div className="prose prose-stone max-w-none">
+                <p>{property.description}</p>
+              </div>
             </div>
 
-            <div className="text-3xl font-bold mb-4">
-              {getPropertyPrice(property)}
+            <div>
+              <h2 className="text-2xl font-semibold mb-4">Características y Amenities</h2>
+              <PropertyFeatures property={property} />
             </div>
 
-            {/* Botones de acción 
-            <div className="grid grid-cols-2 gap-3 mt-6">
-              <Button
-                variant="outline"
-                className="flex items-center justify-center"
-                onClick={() => {/* Lógica para guardar }
-              >
-                <Heart className="h-4 w-4 mr-2" />
-                Guardar
-              </Button>
-              <Button
-                variant="outline"
-                className="flex items-center justify-center"
-                onClick={() => {/* Lógica para compartir }
-              >
-                <Share className="h-4 w-4 mr-2" />
-                Compartir
-              </Button>
-            </div>*/ }
+            {(property.latitude && property.longitude) && (
+              <div>
+                <h2 className="text-2xl font-semibold mb-4">Ubicación</h2>
+                <PropertyMap
+                  latitude={property.latitude}
+                  longitude={property.longitude}
+                  title={property.title}
+                  address={`${property.address}, ${property.city}, ${getProvinceName(property.province)}`}
+                />
+              </div>
+            )}
           </div>
 
-          {/* Componente de contacto */}
-          <PropertyContact property={property} />
+          {/* Sidebar */}
+          <div className="space-y-6">
+            <div className="bg-card  rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="inline-flex items-center bg-primary/10 text-yellow-700 px-3 py-1 rounded-full">
+                  <Tag className="h-4 w-4 mr-1" />
+                  {statusText}
+                </div>
+                {(typeof property.featured === 'number' ? property.featured > 0 : property.featured) && (
+                  <div className="inline-flex items-center bg-yellow-500/10 text-yellow-600 px-3 py-1 rounded-full">
+                    Destacada
+                  </div>
+                )}
+
+              </div>
+              <div className='flex justify-between  mb-4'>
+                <div className="text-3xl font-bold mt-2">
+                  {getPropertyPrice(property)}
+                </div>
+                <SharePropertyMenu property={property} />
+              </div>
+            </div>
+
+            {/* Componente de contacto */}
+            <PropertyContact property={property} />
+          </div>
         </div>
       </div>
     </div>

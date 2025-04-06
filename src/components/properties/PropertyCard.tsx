@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Bed, Bath, Square, MapPin } from 'lucide-react';
 import { Property } from '../../services/api';
 import { Button } from '../ui/Button';
-import { formatPrice, getPropertyPrice } from '../../utils/format';
+import { getPropertyPrice } from '../../utils/format';
 
 // URL base para las imágenes
 //const API_BASE_URL = 'http://localhost/inmobiliaria-api';
@@ -30,20 +30,8 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     return `${API_BASE_URL}/${imageUrl}`;
   };
 
-  // Formatear número con separadores de miles adecuados
-  const formatNumber = (num: number): string => {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  };
-
-  // Obtener el texto del precio
-  const getPriceText = () => {
-    if (property.price_ars) {
-      return `$${formatNumber(property.price_ars)}`;
-    } else if (property.price_usd) {
-      return `U$D ${formatNumber(property.price_usd)}`;
-    }
-    return 'Consultar';
-  };
+ 
+  
 
   const handleWhatsAppClick = (e: React.MouseEvent) => {
     e.preventDefault();

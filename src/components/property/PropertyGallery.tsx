@@ -1,7 +1,8 @@
 // src/components/property/PropertyGallery.tsx
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, X, Heart, Camera, Share2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Heart, Camera } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SharePropertyMenu } from './SharePropertyMenu';
 
 // API base URL
 // const API_BASE_URL = 'http://localhost/inmobiliaria-api';
@@ -12,13 +13,15 @@ interface PropertyGalleryProps {
   title: string;
   onFavorite?: () => void;
   isFavorite?: boolean;
+  property?: Property;
 }
 
-export const PropertyGallery = ({ 
-  images, 
-  title, 
-  onFavorite, 
-  isFavorite = false 
+export const PropertyGallery = ({
+  images,
+  title,
+  onFavorite,
+  property,
+  isFavorite = false
 }: PropertyGalleryProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showLightbox, setShowLightbox] = useState(false);
@@ -28,49 +31,49 @@ export const PropertyGallery = ({
   const [showControls, setShowControls] = useState(true);
   const controlTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
-  
+
   // Adjust view based on screen size
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 768px)');
     setCarouselMode(!mediaQuery.matches);
-    
+
     const handleMediaChange = (e: MediaQueryListEvent) => {
       setCarouselMode(!e.matches);
     };
-    
+
     mediaQuery.addEventListener('change', handleMediaChange);
     return () => mediaQuery.removeEventListener('change', handleMediaChange);
   }, []);
 
   // Get the full image URL
   const getFullImageUrl = (imageUrl: string) => {
-    if (!imageUrl) return ''; 
-    
+    if (!imageUrl) return '';
+
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
       return imageUrl;
     }
-    
+
     return `${API_BASE_URL}/${imageUrl}`;
   };
-  
+
   // Navigation functions
   const handlePrevious = () => {
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
     );
   };
-  
+
   // Image loading control
   const handleImageLoad = () => {
     setIsLoading(false);
   };
-  
+
   // Touch gesture handling for swipe
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.touches[0].clientX);
@@ -79,7 +82,7 @@ export const PropertyGallery = ({
   const handleTouchEnd = (e: React.TouchEvent) => {
     const touchEnd = e.changedTouches[0].clientX;
     const diff = touchStart - touchEnd;
-    
+
     if (Math.abs(diff) > 50) {
       if (diff > 0) {
         handleNext();
@@ -88,7 +91,7 @@ export const PropertyGallery = ({
       }
     }
   };
-  
+
   // Lightbox management
   const openLightbox = (index: number) => {
     setCurrentIndex(index);
@@ -105,35 +108,20 @@ export const PropertyGallery = ({
       clearTimeout(controlTimerRef.current);
     }
   };
-  
+
   // Hide controls after a delay in lightbox
   const hideControlsWithDelay = () => {
     setShowControls(true);
     if (controlTimerRef.current) {
       clearTimeout(controlTimerRef.current);
     }
-    
+
     controlTimerRef.current = setTimeout(() => {
       setShowControls(false);
     }, 3000);
   };
-  
-  // Handle sharing the property
-  const shareProperty = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: title,
-        text: `Check out this property: ${title}`,
-        url: window.location.href,
-      }).catch(err => console.log('Error sharing:', err));
-    } else {
-      // Fallback for browsers that don't support Web Share API
-      const currentUrl = window.location.href;
-      navigator.clipboard.writeText(currentUrl)
-        .then(() => alert('Link copied to clipboard'))
-        .catch(err => console.error('Error copying:', err));
-    }
-  };
+
+ 
 
   // If no images, show a placeholder
   if (!images || images.length === 0) {
@@ -156,12 +144,12 @@ export const PropertyGallery = ({
               {currentIndex + 1}/{images.length}
             </span>
           </div>
-          
+
           <div className="flex gap-2">
             {onFavorite && (
-              <button 
-                className={`p-2 rounded-full backdrop-blur-sm transition-all ${isFavorite 
-                  ? 'bg-red-500 text-white' 
+              <button
+                className={`p-2 rounded-full backdrop-blur-sm transition-all ${isFavorite
+                  ? 'bg-red-500 text-white'
                   : 'bg-black/50 text-white hover:bg-black/70'}`}
                 onClick={onFavorite}
                 aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
@@ -169,33 +157,27 @@ export const PropertyGallery = ({
                 <Heart className={`h-4 w-4 ${isFavorite ? 'fill-white' : ''}`} />
               </button>
             )}
-            
-            <button 
-              className="p-2 bg-black/50 text-white rounded-full backdrop-blur-sm hover:bg-black/70 transition-all"
-              onClick={shareProperty}
-              aria-label="Share property"
-            >
-              <Share2 className="h-4 w-4" />
-            </button>
+
+            <SharePropertyMenu property={property} variant="gallery" />
           </div>
         </div>
-        
+
         {/* Main image view */}
         {carouselMode ? (
           // Carousel mode for mobile
-          <div 
+          <div
             className="relative overflow-hidden"
             ref={sliderRef}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            <div 
+            <div
               className="flex transition-transform duration-300 ease-out"
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
               {images.map((image, index) => (
-                <div 
-                  key={image.id || index} 
+                <div
+                  key={image.id || index}
                   className="flex-shrink-0 w-full h-full"
                   style={{ flex: '0 0 100%' }}
                 >
@@ -209,8 +191,8 @@ export const PropertyGallery = ({
                         </div>
                       </div>
                     )}
-                    <img 
-                      src={getFullImageUrl(image.image_url)} 
+                    <img
+                      src={getFullImageUrl(image.image_url)}
                       alt={`${title} - Image ${index + 1}`}
                       className="w-full h-full object-cover"
                       onLoad={currentIndex === index ? handleImageLoad : undefined}
@@ -219,16 +201,15 @@ export const PropertyGallery = ({
                 </div>
               ))}
             </div>
-            
+
             {/* Pagination */}
             <div className="absolute bottom-3 left-0 right-0 flex justify-center">
               <div className="flex gap-1.5 px-2 py-1.5 rounded-full bg-black/40 backdrop-blur-sm">
                 {images.map((_, index) => (
                   <button
                     key={index}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      currentIndex === index ? 'bg-white scale-110' : 'bg-white/40'
-                    }`}
+                    className={`w-2 h-2 rounded-full transition-all ${currentIndex === index ? 'bg-white scale-110' : 'bg-white/40'
+                      }`}
                     onClick={() => setCurrentIndex(index)}
                     aria-label={`Go to image ${index + 1}`}
                   />
@@ -238,7 +219,7 @@ export const PropertyGallery = ({
           </div>
         ) : (
           // Gallery mode for desktop
-          <div 
+          <div
             className="aspect-video cursor-pointer"
             onClick={() => openLightbox(currentIndex)}
           >
@@ -251,11 +232,11 @@ export const PropertyGallery = ({
                 </div>
               </div>
             )}
-            
+
             <AnimatePresence mode="wait">
-              <motion.img 
+              <motion.img
                 key={currentIndex}
-                src={getFullImageUrl(images[currentIndex]?.image_url)} 
+                src={getFullImageUrl(images[currentIndex]?.image_url)}
                 alt={`${title} - Image ${currentIndex + 1}`}
                 className="w-full h-full object-cover object-center"
                 initial={{ opacity: 0 }}
@@ -265,11 +246,11 @@ export const PropertyGallery = ({
                 onLoad={handleImageLoad}
               />
             </AnimatePresence>
-            
+
             {/* Navigation buttons */}
             {images.length > 1 && (
               <>
-                <button 
+                <button
                   className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 text-gray-800 p-2 rounded-full hover:bg-white transition-colors shadow-md"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -279,8 +260,8 @@ export const PropertyGallery = ({
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
-                
-                <button 
+
+                <button
                   className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 text-gray-800 p-2 rounded-full hover:bg-white transition-colors shadow-md"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -294,23 +275,22 @@ export const PropertyGallery = ({
             )}
           </div>
         )}
-        
+
         {/* Thumbnail gallery (desktop only) */}
         {!carouselMode && images.length > 1 && (
           <div className="grid grid-cols-6 gap-1 p-1 bg-gray-100">
             {images.map((image, index) => (
               <button
                 key={image.id || index}
-                className={`overflow-hidden aspect-[3/2] rounded-md transition-all ${
-                  currentIndex === index 
-                    ? 'ring-2 ring-amber-500 ring-offset-1 scale-[0.97]' 
-                    : 'opacity-60 hover:opacity-90'
-                }`}
+                className={`overflow-hidden aspect-[3/2] rounded-md transition-all ${currentIndex === index
+                  ? 'ring-2 ring-amber-500 ring-offset-1 scale-[0.97]'
+                  : 'opacity-60 hover:opacity-90'
+                  }`}
                 onClick={() => setCurrentIndex(index)}
                 aria-label={`View image ${index + 1}`}
               >
-                <img 
-                  src={getFullImageUrl(image.image_url)} 
+                <img
+                  src={getFullImageUrl(image.image_url)}
                   alt={`${title} - Thumbnail ${index + 1}`}
                   className="w-full h-full object-cover"
                   loading="lazy"
@@ -324,7 +304,7 @@ export const PropertyGallery = ({
       {/* Fullscreen lightbox */}
       <AnimatePresence>
         {showLightbox && (
-          <motion.div 
+          <motion.div
             className="fixed inset-0 z-50 bg-black flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -351,7 +331,7 @@ export const PropertyGallery = ({
                     <div className="text-white/90 font-medium">
                       {title}
                     </div>
-                    <button 
+                    <button
                       className="text-white/90 p-2 hover:bg-white/10 rounded-full transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -362,10 +342,10 @@ export const PropertyGallery = ({
                       <X className="h-6 w-6" />
                     </button>
                   </motion.div>
-                  
+
                   {images.length > 1 && (
                     <>
-                      <motion.button 
+                      <motion.button
                         className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white p-3 rounded-full hover:bg-black/60 transition-colors z-10"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -379,8 +359,8 @@ export const PropertyGallery = ({
                       >
                         <ChevronLeft className="h-6 w-6" />
                       </motion.button>
-                      
-                      <motion.button 
+
+                      <motion.button
                         className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white p-3 rounded-full hover:bg-black/60 transition-colors z-10"
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -396,8 +376,8 @@ export const PropertyGallery = ({
                       </motion.button>
                     </>
                   )}
-                  
-                  <motion.div 
+
+                  <motion.div
                     className="absolute bottom-4 left-0 right-0 flex justify-center"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -411,16 +391,16 @@ export const PropertyGallery = ({
                 </>
               )}
             </AnimatePresence>
-            
+
             {/* Main image container */}
-            <div 
+            <div
               className="w-full h-full flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
               <AnimatePresence mode="wait">
-                <motion.img 
+                <motion.img
                   key={currentIndex}
-                  src={getFullImageUrl(images[currentIndex]?.image_url)} 
+                  src={getFullImageUrl(images[currentIndex]?.image_url)}
                   alt={`${title} - Image ${currentIndex + 1}`}
                   className="max-h-screen max-w-full object-contain select-none"
                   initial={{ opacity: 0, scale: 0.95 }}
