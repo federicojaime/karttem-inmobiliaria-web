@@ -154,7 +154,7 @@ export const PropertyCard = ({
                         <div className="flex flex-wrap justify-between text-gray-600 text-sm gap-4">
                             {(property.bedrooms !== null && property.bedrooms > 0) && (
                                 <div className="flex items-center">
-                                    <Bed className="h-4 w-4 mr-1 text-amber-500" />
+                                    <Bed className="h-4 w-4 mr-1 text-amber-800" />
                                     <span>
                                         {property.bedrooms} {property.bedrooms === 1 ? 'Dorm.' : 'Dorms.'}
                                     </span>
@@ -163,7 +163,7 @@ export const PropertyCard = ({
 
                             {(property.bathrooms !== null && property.bathrooms > 0) && (
                                 <div className="flex items-center">
-                                    <Bath className="h-4 w-4 mr-1 text-amber-500" />
+                                    <Bath className="h-4 w-4 mr-1 text-amber-800" />
                                     <span>
                                         {property.bathrooms} {property.bathrooms === 1 ? 'Baño' : 'Baños'}
                                     </span>
@@ -171,8 +171,8 @@ export const PropertyCard = ({
                             )}
 
                             <div className="flex items-center">
-                                <Square className="h-4 w-4 mr-1 text-amber-500" />
-                                <span>{property.covered_area}m²</span>
+                                <Square className="h-4 w-4 mr-1 text-amber-800" />
+                                <span>{property.covered_area} m²</span>
                             </div>
                         </div>
                     </div>

@@ -1,14 +1,23 @@
-// src/components/common/Footer.tsx
+// src/components/common/Footer.tsx - Versión con recarga forzada
+
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Mail, Phone, MapPin, Clock } from 'lucide-react';
 import { Logo } from './Logo';
 import { Button } from '../ui/Button';
 import LogoCodeo from '../../assets/codeo-logo.png';
+
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const handleWhatsAppClick = () => {
     window.open('https://wa.me/5492664463038?text=Hola%20KARTTEM%20Inmobiliaria,%20me%20gustaría%20recibir%20información', '_blank');
+  };
+
+  // Esta función manejará los enlaces con parámetros de consulta para forzar la recarga
+  const handleQueryParamLink = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    // Cambiamos la ubicación directamente para forzar una recarga de la página
+    window.location.href = path;
   };
 
   return (
@@ -36,16 +45,29 @@ export const Footer = () => {
             <h3 className="text-lg font-semibold text-primary mb-4">Navegación</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-gray-300 hover:text-primary transition-colors">Inicio</Link>
+                <Link to="/" className="text-gray-300 hover:text-primary transition-colors">
+                  Inicio
+                </Link>
               </li>
               <li>
-                <Link to="/properties" className="text-gray-300 hover:text-primary transition-colors">Propiedades</Link>
+                <Link to="/properties" className="text-gray-300 hover:text-primary transition-colors">
+                  Propiedades
+                </Link>
               </li>
               <li>
-                <Link to="/properties?search=true" className="text-gray-300 hover:text-primary transition-colors">Buscar</Link>
+                {/* Usamos <a> en lugar de Link para permitir recargas */}
+                <a 
+                  href="/karttem-web/properties?search=true" 
+                  className="text-gray-300 hover:text-primary transition-colors"
+                  onClick={(e) => handleQueryParamLink(e, '/karttem-web/properties?search=true')}
+                >
+                  Buscar
+                </a>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-300 hover:text-primary transition-colors">Contacto</Link>
+                <Link to="/contact" className="text-gray-300 hover:text-primary transition-colors">
+                  Contacto
+                </Link>
               </li>
             </ul>
           </div>
@@ -54,16 +76,29 @@ export const Footer = () => {
             <h3 className="text-lg font-semibold text-primary mb-4">Servicios</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/properties?status=sale" className="text-gray-300 hover:text-primary transition-colors">Venta de propiedades</Link>
+                {/* Usamos <a> en lugar de Link para permitir recargas */}
+                <a 
+                  href="/karttem-web/properties?status=sale" 
+                  className="text-gray-300 hover:text-primary transition-colors"
+                  onClick={(e) => handleQueryParamLink(e, '/karttem-web/properties?status=sale')}
+                >
+                  Venta de propiedades
+                </a>
               </li>
               <li>
-                <Link to="/properties?status=rent" className="text-gray-300 hover:text-primary transition-colors">Alquiler de propiedades</Link>
+                {/* Usamos <a> en lugar de Link para permitir recargas */}
+                <a 
+                  href="/karttem-web/properties?status=rent" 
+                  className="text-gray-300 hover:text-primary transition-colors"
+                  onClick={(e) => handleQueryParamLink(e, '/karttem-web/properties?status=rent')}
+                >
+                  Alquiler de propiedades
+                </a>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-300 hover:text-primary transition-colors">Tasaciones</Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-gray-300 hover:text-primary transition-colors">Asesoramiento inmobiliario</Link>
+                <Link to="/contact" className="text-gray-300 hover:text-primary transition-colors">
+                  Asesoramiento inmobiliario
+                </Link>
               </li>
             </ul>
           </div>
@@ -95,7 +130,8 @@ export const Footer = () => {
               <li className="flex items-center">
                 <Mail className="h-5 w-5 mr-3 text-primary flex-shrink-0" />
                 <a href="mailto:karttem@gmail.com" className="text-gray-300 hover:text-primary transition-colors">
-                  karttem@gmail.com                </a>
+                  karttem@gmail.com
+                </a>
               </li>
             </ul>
 
@@ -140,6 +176,6 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-    </footer >
+    </footer>
   );
 };

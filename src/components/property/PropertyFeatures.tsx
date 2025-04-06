@@ -14,8 +14,8 @@ import {
     const mainFeatures = [
       { name: 'Habitaciones', value: property.bedrooms, icon: <Bed className="h-5 w-5" /> },
       { name: 'Baños', value: property.bathrooms, icon: <Bath className="h-5 w-5" /> },
-      { name: 'Superficie Cubierta', value: `${property.covered_area}m²`, icon: <Home className="h-5 w-5" /> },
-      { name: 'Superficie Total', value: `${property.total_area}m²`, icon: <AreaChart className="h-5 w-5" /> },
+      { name: 'Superficie Cubierta', value: `${property.covered_area} m²`, icon: <Home className="h-5 w-5" /> },
+      { name: 'Superficie Total', value: `${property.total_area} m²`, icon: <AreaChart className="h-5 w-5" /> },
       { name: 'Cochera', value: property.garage ? 'Sí' : 'No', icon: <Car className="h-5 w-5" /> },
     ];
   

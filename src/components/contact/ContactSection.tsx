@@ -52,12 +52,12 @@ export const ContactSection = () => {
         {
             icon: <Phone className="h-6 w-6" />,
             title: 'Teléfonos',
-            details: ['+54 9 2664 46-3038', '+54 9 266 4424950']
+            details: ['+54 9 266 446-3038', '+54 9 266 4424950']
         },
         {
             icon: <Mail className="h-6 w-6" />,
             title: 'Email',
-            details: ['karttem@gmail.com', 'karttemsa@gmail.com']
+            details: ['info@karttemsa.com']
         },
         {
             icon: <Clock className="h-6 w-6" />,

@@ -54,7 +54,7 @@ export const ContactCTA = () => {
               onClick={() => window.location.href = 'tel:+5492664463038'}
             >
               <Phone className="h-5 w-5 mr-2" />
-              Llamar: +54 9 2664 46-3038
+              Llamar: +54 9 266 446-3038
             </Button>
           </motion.div>
         </div>

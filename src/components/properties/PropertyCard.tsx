@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Bed, Bath, Square, MapPin } from 'lucide-react';
 import { Property } from '../../services/api';
 import { Button } from '../ui/Button';
+import { formatPrice, getPropertyPrice } from '../../utils/format';
 
 // URL base para las imágenes
 //const API_BASE_URL = 'http://localhost/inmobiliaria-api';
@@ -82,7 +83,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
           <div className="mt-4">
             <div className="font-bold text-xl text-secondary">
-              {getPriceText()}
+              {getPropertyPrice(property)}
             </div>
           </div>
 
@@ -104,7 +105,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
               <div className="flex items-center">
                 <Square className="h-4 w-4 mr-1 text-primary" />
-                <span>{property.covered_area}m²</span>
+                <span>{property.covered_area} m²</span>
               </div>
             </div>
           </div>

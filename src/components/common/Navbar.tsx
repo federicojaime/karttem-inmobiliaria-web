@@ -54,7 +54,7 @@ export const Navbar = () => {
                 className="flex items-center text-white text-xs hover:text-primary transition-colors"
               >
                 <Phone className="h-3 w-3 mr-1 text-primary" />
-                +54 9 2664 424950
+                +54 9 266 4424950
               </a>
               <Button 
                 size="sm" 
@@ -185,7 +185,7 @@ export const Navbar = () => {
                     className="text-white hover:text-primary transition-colors text-sm flex items-center"
                   >
                     <Phone className="h-3 w-3 mr-1 text-primary" />
-                    +54 9 2664 46-3038
+                    +54 9 266 446-3038
                   </a>
                 </div>
               </div>

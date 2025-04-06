@@ -6,22 +6,13 @@ import { Bed, Bath, Square, ExternalLink, Layers } from 'lucide-react';
 import { Button } from '../ui/Button';
 import api, { Property } from '../../services/api';
 import 'leaflet/dist/leaflet.css';
+import { getPropertyPrice } from '../../utils/format';
+
 
 // Fix Leaflet marker icon issue
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-
-// Fix Leaflet icon issue
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
 
 // URL base para las imágenes
 const API_BASE_URL = 'https://codeo.site/api-karttem';
@@ -30,10 +21,35 @@ const API_BASE_URL = 'https://codeo.site/api-karttem';
 const SAN_LUIS_COORDS = [-33.3022, -66.3377]; // Latitud, Longitud
 const DEFAULT_ZOOM = 12;
 
+// Crear íconos personalizados para los marcadores
+const createMarkerIcon = (color: string) => {
+    return L.divIcon({
+        className: 'custom-marker',
+        html: `<div style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+        popupAnchor: [0, -10],
+    });
+};
+
+// Íconos de marcadores por estado
+const markerIcons = {
+    sale: createMarkerIcon('#ff0000'), // Rojo para En Venta
+    rent: createMarkerIcon('#008080'), // Verde azulado para En Alquiler
+    default: L.icon({
+        iconUrl: icon,
+        shadowUrl: iconShadow,
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+    })
+};
+
 export const PropertyMap = () => {
     const [properties, setProperties] = useState<Property[]>([]);
     const [loading, setLoading] = useState(true);
     const [mapType, setMapType] = useState<'standard' | 'satellite'>('standard');
+    const [showLegend, setShowLegend] = useState(false); // Leyenda oculta por defecto
     const navigate = useNavigate();
 
     // Cargar propiedades
@@ -43,14 +59,22 @@ export const PropertyMap = () => {
                 setLoading(true);
                 const response = await api.getPublicProperties();
                 if (response.ok) {
-                    // Filtrar propiedades que tienen coordenadas válidas
-                    let propertiesWithCoords = response.data.filter(
-                        (prop) => prop.latitude && prop.longitude
-                    );
+                    // Filtrar propiedades disponibles con coordenadas válidas
+                    let propertiesWithCoords = response.data
+                        .filter(prop =>
+                            prop.latitude &&
+                            prop.longitude &&
+                            (prop.status === 'sale' || prop.status === 'rent')
+                        );
 
                     // Si no hay propiedades con coordenadas, generar algunas para demo
                     if (propertiesWithCoords.length === 0) {
-                        propertiesWithCoords = response.data.slice(0, 10).map((prop) => {
+                        // Tomar solo las propiedades en venta o alquiler
+                        const availableProps = response.data
+                            .filter(prop => prop.status === 'sale' || prop.status === 'rent')
+                            .slice(0, 10);
+
+                        propertiesWithCoords = availableProps.map((prop) => {
                             // Generar coordenadas aleatorias alrededor de San Luis
                             const randomLat = SAN_LUIS_COORDS[0] + (Math.random() - 0.5) * 0.05;
                             const randomLng = SAN_LUIS_COORDS[1] + (Math.random() - 0.5) * 0.05;
@@ -112,6 +136,11 @@ export const PropertyMap = () => {
         navigate(`/property/${propertyId}`);
     };
 
+    // Obtener el icono adecuado para el marcador
+    const getMarkerIcon = (property: Property) => {
+        return markerIcons[property.status as keyof typeof markerIcons] || markerIcons.default;
+    };
+
     if (loading) {
         return (
             <div className="flex justify-center items-center h-96 bg-gray-100 rounded-lg">
@@ -145,7 +174,7 @@ export const PropertyMap = () => {
 
                 <ZoomControl position="bottomright" />
 
-                {/* Control para cambiar tipo de mapa */}
+                {/* Controles del mapa */}
                 <div className="leaflet-top leaflet-right">
                     <div className="leaflet-control leaflet-bar" style={{ margin: '10px' }}>
                         <Button
@@ -159,12 +188,68 @@ export const PropertyMap = () => {
                             {mapType === 'standard' ? 'Satélite' : 'Mapa'}
                         </Button>
                     </div>
+
+                    <div className="leaflet-control leaflet-bar" style={{ margin: '10px', marginTop: '55px' }}>
+                        <Button
+                            size="sm"
+                            variant="secondary"
+                            className="shadow-md"
+                            onClick={() => setShowLegend(!showLegend)}
+                            style={{ zIndex: 1000 }}
+                        >
+                            {showLegend ? 'Ocultar leyenda' : 'Mostrar leyenda'}
+                        </Button>
+                    </div>
                 </div>
 
+                {/* Leyenda - Ahora en la esquina superior derecha */}
+                {showLegend && (
+                    <div className="leaflet-top leaflet-right">
+                        <div
+                            className="leaflet-control"
+                            style={{
+                                margin: '10px',
+                                marginTop: '70px',
+                                backgroundColor: 'white',
+                                padding: '8px 10px',
+                                borderRadius: '4px',
+                                boxShadow: '0 1px 5px rgba(0,0,0,0.2)',
+                                border: '1px solid #ccc',
+                                zIndex: 1001 // Asegurar que esté por encima de otros controles
+                            }}
+                        >
+                            <div className="flex flex-col">
+                                <div className="flex items-center mb-1">
+                                    <div style={{
+                                        backgroundColor: '#ff0000',
+                                        width: '12px',
+                                        height: '12px',
+                                        borderRadius: '50%',
+                                        marginRight: '8px'
+                                    }}></div>
+                                    <span className="text-xs">En Venta</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <div style={{
+                                        backgroundColor: '#008080',
+                                        width: '12px',
+                                        height: '12px',
+                                        borderRadius: '50%',
+                                        marginRight: '8px'
+                                    }}></div>
+                                    <span className="text-xs">En Alquiler</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Marcadores de propiedades */}
                 {properties.map((property) => (
                     <Marker
                         key={property.id}
                         position={[property.latitude!, property.longitude!] as [number, number]}
+                        icon={getMarkerIcon(property)}
                     >
                         <Popup className="property-popup" minWidth={280} maxWidth={320}>
                             <div className="popup-content">
@@ -182,7 +267,9 @@ export const PropertyMap = () => {
                                 <div className="p-1">
                                     <h3 className="text-base font-bold leading-tight mb-1 truncate">{property.title}</h3>
                                     <p className="text-sm text-gray-500 mb-2 truncate">{property.address}, {property.city}</p>
-                                    <div className="font-bold text-lg text-secondary mb-2">{getPriceText(property)}</div>
+                                    <div className="font-bold text-lg text-secondary mb-2">
+                                        {getPropertyPrice(property)}
+                                    </div>
                                     <p className="text-xs text-gray-600 line-clamp-2 mb-2">
                                         {property.description.substring(0, 100)}{property.description.length > 100 ? '...' : ''}
                                     </p>
@@ -204,7 +291,7 @@ export const PropertyMap = () => {
 
                                         <div className="flex items-center">
                                             <Square className="h-3 w-3 mr-1 text-primary" />
-                                            <span>{property.covered_area}m²</span>
+                                            <span>{property.covered_area} m²</span>
                                         </div>
                                     </div>
 

@@ -159,7 +159,7 @@ export const Contact = () => {
                 >
                   <h3 className="text-xl font-semibold text-gray-800 mb-3">¿Cuáles son los horarios de atención?</h3>
                   <p className="text-gray-600">
-                    Nuestras oficinas están abiertas de lunes a viernes de 9:00 a 18:00 y los sábados de 9:00 a 13:00. También puede contactarnos por WhatsApp en cualquier momento.
+                    Nuestras oficinas están abiertas de lunes a viernes de 8:00 a 12:30 y  de 16:30 a 20:30 los sábados de 9:00 a 12:00. También puede contactarnos por WhatsApp en cualquier momento.
                   </p>
                 </motion.div>
                 

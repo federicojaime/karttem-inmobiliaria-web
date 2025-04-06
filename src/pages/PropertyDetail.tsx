@@ -10,6 +10,7 @@ import { PropertyFeatures } from '../components/property/PropertyFeatures';
 import { PropertyMap } from '../components/property/PropertyMap';
 import { PropertyContact } from '../components/property/PropertyContact';
 import { PROVINCES } from '../data/locations'; // Importar la lista de provincias
+import { getPropertyPrice } from '../utils/format';
 
 export const PropertyDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -189,11 +190,11 @@ export const PropertyDetail = () => {
         <div className="space-y-6">
           <div className="bg-card rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="inline-flex items-center bg-primary/10 text-primary px-3 py-1 rounded-full">
+              <div className="inline-flex items-center bg-primary/10 text-yellow-700 px-3 py-1 rounded-full">
                 <Tag className="h-4 w-4 mr-1" />
                 {statusText}
               </div>
-              {property.featured && (
+              {(typeof property.featured === 'number' ? property.featured > 0 : property.featured) && (
                 <div className="inline-flex items-center bg-yellow-500/10 text-yellow-600 px-3 py-1 rounded-full">
                   Destacada
                 </div>
@@ -201,15 +202,15 @@ export const PropertyDetail = () => {
             </div>
 
             <div className="text-3xl font-bold mb-4">
-              {getPriceText()}
+              {getPropertyPrice(property)}
             </div>
 
-            {/* Botones de acción */}
+            {/* Botones de acción 
             <div className="grid grid-cols-2 gap-3 mt-6">
               <Button
                 variant="outline"
                 className="flex items-center justify-center"
-                onClick={() => {/* Lógica para guardar */ }}
+                onClick={() => {/* Lógica para guardar }
               >
                 <Heart className="h-4 w-4 mr-2" />
                 Guardar
@@ -217,12 +218,12 @@ export const PropertyDetail = () => {
               <Button
                 variant="outline"
                 className="flex items-center justify-center"
-                onClick={() => {/* Lógica para compartir */ }}
+                onClick={() => {/* Lógica para compartir }
               >
                 <Share className="h-4 w-4 mr-2" />
                 Compartir
               </Button>
-            </div>
+            </div>*/ }
           </div>
 
           {/* Componente de contacto */}
