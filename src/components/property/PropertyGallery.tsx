@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, X, Heart, Camera } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SharePropertyMenu } from './SharePropertyMenu';
+import { Property } from '../../services/api'; // Importamos el tipo Property
 
 // API base URL
 // const API_BASE_URL = 'http://localhost/inmobiliaria-api';
@@ -13,7 +14,7 @@ interface PropertyGalleryProps {
   title: string;
   onFavorite?: () => void;
   isFavorite?: boolean;
-  property?: Property;
+  property: Property;
 }
 
 export const PropertyGallery = ({

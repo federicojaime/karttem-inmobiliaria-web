@@ -10,7 +10,7 @@ import { PDFService, initPDFService } from '../../services/PDFService';
 import { ShareService } from '../../services/ShareService';
 
 interface SharePropertyMenuProps {
-    property: Property;
+    property: Property; // Esta propiedad debe ser obligatoria
     variant?: 'default' | 'gallery';
 }
 
@@ -187,7 +187,6 @@ export const SharePropertyMenu: React.FC<SharePropertyMenuProps> = ({
                                 </button>
 
                                 {/* Opción de compartir nativa */}
-
                                 <button
                                     onClick={async () => {
                                         await ShareService.shareNative(property, window.location.href);
@@ -198,7 +197,6 @@ export const SharePropertyMenu: React.FC<SharePropertyMenuProps> = ({
                                     <Share2 className="h-5 w-5 mr-3 text-purple-500" />
                                     <span>Compartir (nativo)</span>
                                 </button>
-
                             </div>
                         </div>
                     </motion.div>
