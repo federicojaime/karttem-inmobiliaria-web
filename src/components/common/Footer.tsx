@@ -54,8 +54,8 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a 
-                  href="/karttem-web/properties?search=true" 
+                <a
+                  href="/karttem-web/properties?search=true"
                   className="text-gray-300 hover:text-primary transition-colors"
                   onClick={(e) => handleQueryParamLink(e, '/karttem-web/properties?search=true')}
                 >
@@ -74,8 +74,8 @@ export const Footer = () => {
             <h3 className="text-lg font-semibold text-primary mb-4">Servicios</h3>
             <ul className="space-y-2">
               <li>
-                <a 
-                  href="/karttem-web/properties?status=sale" 
+                <a
+                  href="/karttem-web/properties?status=sale"
                   className="text-gray-300 hover:text-primary transition-colors"
                   onClick={(e) => handleQueryParamLink(e, '/karttem-web/properties?status=sale')}
                 >
@@ -83,8 +83,26 @@ export const Footer = () => {
                 </a>
               </li>
               <li>
-                <a 
-                  href="/karttem-web/properties?status=rent" 
+                <a
+                  href="/karttem-web/properties?status=rent"
+                  className="text-gray-300 hover:text-primary transition-colors"
+                  onClick={(e) => handleQueryParamLink(e, '/karttem-web/properties?status=rent')}
+                >
+                  Alquiler de propiedades
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/karttem-web/properties?status=venta_en_pozo"
+                  className="text-gray-300 hover:text-primary transition-colors"
+                  onClick={(e) => handleQueryParamLink(e, '/karttem-web/properties?status=venta_en_pozo')}
+                >
+                  Venta en Pozo
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/karttem-web/properties?status=rent"
                   className="text-gray-300 hover:text-primary transition-colors"
                   onClick={(e) => handleQueryParamLink(e, '/karttem-web/properties?status=rent')}
                 >

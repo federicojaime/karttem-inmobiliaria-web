@@ -37,13 +37,13 @@ export const PropertyDetail = () => {
       }
     };
 
-    
+
     if (id) {
       fetchProperty();
     }
   }, [id]);
 
-  
+
 
   if (loading) {
     return (
@@ -86,11 +86,12 @@ export const PropertyDetail = () => {
     'sale': 'Venta',
     'rent': 'Alquiler',
     'temporary_rent': 'Alquiler temporario',
+    'venta_en_pozo': 'Venta en Pozo',
     'sold': 'Vendido',
     'rented': 'Alquilado'
   }[property.status] || property.status;
 
-  
+
 
   // Obtener el nombre legible de la provincia a partir del ID
   const getProvinceName = (provinceId: string) => {

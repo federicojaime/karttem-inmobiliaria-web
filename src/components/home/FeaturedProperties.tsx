@@ -20,9 +20,9 @@ export const FeaturedProperties = () => {
         setLoading(true);
         const response = await api.getFeaturedProperties();
         if (response.ok) {
-          // Filtrar propiedades por estado
+          // Filtrar propiedades por estado - ACTUALIZADO
           const salesProps = response.data
-            .filter(prop => prop.status === 'sale')
+            .filter(prop => prop.status === 'sale' || prop.status === 'venta_en_pozo')
             .slice(0, 5);
 
           const rentProps = response.data

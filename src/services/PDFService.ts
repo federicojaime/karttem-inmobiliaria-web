@@ -3,7 +3,7 @@ import jsPDF from 'jspdf';
 import { Property } from './api';
 
 // Variable global para el estado de carga
-let setLoadingState: (loading: boolean) => void = () => {};
+let setLoadingState: (loading: boolean) => void = () => { };
 
 export class PDFService {
   /**
@@ -13,28 +13,28 @@ export class PDFService {
     try {
       setLoadingState(true);
       console.log("Iniciando generación de PDF para cliente:", property.id);
-      
+
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
       });
-      
+
       let mainImageBase64: string | null = null;
       try {
         const imgElement = document.querySelector('.property-gallery img') as HTMLImageElement;
-        
+
         if (imgElement && imgElement.complete && imgElement.naturalWidth > 0) {
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
-          
+
           if (ctx) {
             const MAX_WIDTH = 600;
             const MAX_HEIGHT = 450;
-            
+
             let width = imgElement.naturalWidth;
             let height = imgElement.naturalHeight;
-            
+
             if (width > height) {
               if (width > MAX_WIDTH) {
                 height = Math.floor(height * (MAX_WIDTH / width));
@@ -46,21 +46,21 @@ export class PDFService {
                 height = MAX_HEIGHT;
               }
             }
-            
+
             canvas.width = width;
             canvas.height = height;
-            
+
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, width, height);
             ctx.drawImage(imgElement, 0, 0, width, height);
-            
+
             mainImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
           }
         }
       } catch (captureError) {
         console.error("Error al capturar imagen:", captureError);
       }
-      
+
       await this.generateClientPDFContent(pdf, property, mainImageBase64);
       pdf.save(`KARTTEM-SA-Propiedad-${property.id}.pdf`);
     } catch (error) {
@@ -77,28 +77,28 @@ export class PDFService {
   static async generateInternalPDF(property: Property, ownerName?: string, ownerPhone?: string): Promise<void> {
     try {
       setLoadingState(true);
-      
+
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
       });
-      
+
       let mainImageBase64: string | null = null;
       try {
         const imgElement = document.querySelector('.property-gallery img') as HTMLImageElement;
-        
+
         if (imgElement && imgElement.complete && imgElement.naturalWidth > 0) {
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
-          
+
           if (ctx) {
             const MAX_WIDTH = 600;
             const MAX_HEIGHT = 450;
-            
+
             let width = imgElement.naturalWidth;
             let height = imgElement.naturalHeight;
-            
+
             if (width > height) {
               if (width > MAX_WIDTH) {
                 height = Math.floor(height * (MAX_WIDTH / width));
@@ -110,21 +110,21 @@ export class PDFService {
                 height = MAX_HEIGHT;
               }
             }
-            
+
             canvas.width = width;
             canvas.height = height;
-            
+
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, width, height);
             ctx.drawImage(imgElement, 0, 0, width, height);
-            
+
             mainImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
           }
         }
       } catch (captureError) {
         console.error("Error al capturar imagen:", captureError);
       }
-      
+
       await this.generateInternalPDFContent(pdf, property, mainImageBase64, ownerName, ownerPhone);
       pdf.save(`KARTTEM-SA-Interno-Propiedad-${property.id}.pdf`);
     } catch (error) {
@@ -139,33 +139,33 @@ export class PDFService {
    * Genera el contenido del PDF para cliente
    */
   private static async generateClientPDFContent(
-    pdf: jsPDF, 
-    property: Property, 
+    pdf: jsPDF,
+    property: Property,
     mainImageBase64: string | null
   ): Promise<void> {
     const pageWidth = 210;
     const margin = 15;
     const contentWidth = pageWidth - (margin * 2);
-    
+
     let yPos = 20;
-    
+
     // Encabezado
     pdf.setFontSize(22);
     pdf.setTextColor(0, 0, 0);
     pdf.setFont('helvetica', 'bold');
     pdf.text('KARTTEM S.A.', margin, yPos);
     yPos += 7;
-    
+
     pdf.setFontSize(11);
     pdf.setFont('helvetica', 'normal');
     pdf.text('INMOBILIARIA', margin, yPos);
     yPos += 10;
-    
+
     // Línea separadora
     pdf.setDrawColor(200, 200, 200);
     pdf.line(margin, yPos, pageWidth - margin, yPos);
     yPos += 10;
-    
+
     // Información de contacto
     pdf.setFontSize(10);
     pdf.setFont('helvetica', 'normal');
@@ -174,20 +174,20 @@ export class PDFService {
     yPos += 4;
     pdf.text('Tel: +54 266 4424950 | Cel: +54 9 2664 463038', margin, yPos);
     yPos += 8;
-    
+
     // Referencia de la propiedad
     pdf.text(`REF: ${property.id}`, margin, yPos);
     yPos += 8;
-    
+
     // Título de la propiedad
     pdf.setFont('helvetica', 'bold');
     pdf.setFontSize(16);
     pdf.setTextColor(0, 0, 0);
-    
+
     const titleLines = pdf.splitTextToSize(property.title || "Propiedad sin título", contentWidth);
     pdf.text(titleLines, margin, yPos);
     yPos += (titleLines.length * 8) + 2;
-    
+
     // Ubicación
     if (property.address || property.city) {
       pdf.setFont('helvetica', 'normal');
@@ -197,7 +197,7 @@ export class PDFService {
       pdf.text(location, margin, yPos);
       yPos += 8;
     }
-    
+
     // Precio sin centavos
     pdf.setFontSize(14);
     pdf.setFont('helvetica', 'bold');
@@ -205,7 +205,7 @@ export class PDFService {
     const priceText = this.formatPriceWithoutCents(property);
     pdf.text(priceText, margin, yPos);
     yPos += 7;
-    
+
     // Estado de la propiedad
     const statusText = this.getStatusText(property.status || "");
     const typeText = property.type_name || property.type || 'Propiedad';
@@ -213,7 +213,7 @@ export class PDFService {
     pdf.setTextColor(80, 80, 80);
     pdf.text(`${typeText} en ${statusText.toLowerCase()}`, margin, yPos);
     yPos += 15;
-    
+
     // Agregar imagen principal si existe
     if (mainImageBase64) {
       try {
@@ -233,23 +233,23 @@ export class PDFService {
       pdf.text('(No hay imagen disponible)', margin, yPos + 20);
       yPos += 40;
     }
-    
+
     // Descripción
     if (property.description) {
       pdf.setDrawColor(200, 200, 200);
       pdf.line(margin, yPos, pageWidth - margin, yPos);
       yPos += 8;
-      
+
       pdf.setFontSize(14);
       pdf.setFont('helvetica', 'bold');
       pdf.setTextColor(40, 40, 40);
       pdf.text('Descripción', margin, yPos);
       yPos += 8;
-      
+
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(11);
       pdf.setTextColor(60, 60, 60);
-      
+
       const splitDescription = pdf.splitTextToSize(property.description, contentWidth);
       pdf.text(splitDescription, margin, yPos);
       yPos += (splitDescription.length * 6) + 10;
@@ -259,23 +259,23 @@ export class PDFService {
       pdf.addPage();
       yPos = 20;
     }
-    
+
     // Características principales
     pdf.setDrawColor(200, 200, 200);
     pdf.line(margin, yPos, pageWidth - margin, yPos);
     yPos += 8;
-    
+
     pdf.setFontSize(14);
     pdf.setFont('helvetica', 'bold');
     pdf.setTextColor(40, 40, 40);
     pdf.text('Características principales', margin, yPos);
     yPos += 10;
-    
+
     pdf.setFont('helvetica', 'normal');
     pdf.setFontSize(11);
-    
+
     let rowCount = 0;
-    
+
     if (property.covered_area) {
       pdf.setFont('helvetica', 'bold');
       pdf.text('Superficie Cubierta:', margin, yPos);
@@ -284,7 +284,7 @@ export class PDFService {
       rowCount++;
       yPos += 7;
     }
-    
+
     if (property.total_area) {
       pdf.setFont('helvetica', 'bold');
       pdf.text('Superficie Total:', margin, yPos);
@@ -293,7 +293,7 @@ export class PDFService {
       rowCount++;
       yPos += 7;
     }
-    
+
     if (property.bedrooms !== null && property.bedrooms !== undefined) {
       pdf.setFont('helvetica', 'bold');
       pdf.text('Dormitorios:', margin, yPos);
@@ -302,7 +302,7 @@ export class PDFService {
       rowCount++;
       yPos += 7;
     }
-    
+
     if (property.bathrooms !== null && property.bathrooms !== undefined) {
       pdf.setFont('helvetica', 'bold');
       pdf.text('Baños:', margin, yPos);
@@ -311,7 +311,7 @@ export class PDFService {
       rowCount++;
       yPos += 7;
     }
-    
+
     if (property.garage !== undefined) {
       pdf.setFont('helvetica', 'bold');
       pdf.text('Cochera:', margin, yPos);
@@ -320,7 +320,7 @@ export class PDFService {
       rowCount++;
       yPos += 7;
     }
-    
+
     if (rowCount === 0) {
       pdf.text('No hay características adicionales especificadas.', margin, yPos);
       yPos += 10;
@@ -330,19 +330,19 @@ export class PDFService {
     pdf.setDrawColor(200, 200, 200);
     pdf.line(margin, yPos, margin + contentWidth, yPos);
     yPos += 8;
-    
+
     pdf.setFontSize(14);
     pdf.setFont('helvetica', 'bold');
     pdf.setTextColor(40, 40, 40);
     pdf.text('Contacto', margin, yPos);
     yPos += 8;
-    
+
     pdf.setFontSize(11);
     pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(60, 60, 60);
     pdf.text('Para más información sobre esta propiedad, contáctenos:', margin, yPos);
     yPos += 6;
-    
+
     pdf.text('• Teléfono Fijo: +54 266 4424950', margin, yPos);
     yPos += 6;
     pdf.text('• Celular/WhatsApp: +54 9 2664 463038', margin, yPos);
@@ -356,8 +356,8 @@ export class PDFService {
    * Genera el contenido del PDF para uso interno
    */
   private static async generateInternalPDFContent(
-    pdf: jsPDF, 
-    property: Property, 
+    pdf: jsPDF,
+    property: Property,
     mainImageBase64: string | null,
     ownerName?: string,
     ownerPhone?: string
@@ -365,61 +365,61 @@ export class PDFService {
     const pageWidth = 210;
     const margin = 15;
     const contentWidth = pageWidth - (margin * 2);
-    
+
     let yPos = 20;
-    
+
     // Encabezado
     pdf.setFontSize(22);
     pdf.setTextColor(0, 0, 0);
     pdf.setFont('helvetica', 'bold');
     pdf.text('KARTTEM S.A. - USO INTERNO', margin, yPos);
     yPos += 15;
-    
+
     // Información del propietario
     if (ownerName || ownerPhone) {
       pdf.setDrawColor(200, 200, 200);
       pdf.line(margin, yPos, pageWidth - margin, yPos);
       yPos += 8;
-      
+
       pdf.setFontSize(14);
       pdf.setFont('helvetica', 'bold');
       pdf.setTextColor(40, 40, 40);
       pdf.text('Información del Propietario', margin, yPos);
       yPos += 8;
-      
+
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(11);
       pdf.setTextColor(60, 60, 60);
-      
+
       if (ownerName) {
         pdf.text(`Nombre: ${ownerName}`, margin, yPos);
         yPos += 6;
       }
-      
+
       if (ownerPhone) {
         pdf.text(`Teléfono: ${ownerPhone}`, margin, yPos);
         yPos += 6;
       }
-      
+
       yPos += 6;
     }
-    
+
     // Referencia de la propiedad
     pdf.setFontSize(10);
     pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(100, 100, 100);
     pdf.text(`REF: ${property.id}`, margin, yPos);
     yPos += 8;
-    
+
     // Título de la propiedad
     pdf.setFont('helvetica', 'bold');
     pdf.setFontSize(16);
     pdf.setTextColor(0, 0, 0);
-    
+
     const titleLines = pdf.splitTextToSize(property.title || "Propiedad sin título", contentWidth);
     pdf.text(titleLines, margin, yPos);
     yPos += (titleLines.length * 8) + 2;
-    
+
     // Ubicación
     if (property.address || property.city) {
       pdf.setFont('helvetica', 'normal');
@@ -429,7 +429,7 @@ export class PDFService {
       pdf.text(location, margin, yPos);
       yPos += 8;
     }
-    
+
     // Precio sin centavos
     pdf.setFontSize(14);
     pdf.setFont('helvetica', 'bold');
@@ -437,7 +437,7 @@ export class PDFService {
     const priceText = this.formatPriceWithoutCents(property);
     pdf.text(priceText, margin, yPos);
     yPos += 7;
-    
+
     // Estado de la propiedad
     const statusText = this.getStatusText(property.status || "");
     const typeText = property.type_name || property.type || 'Propiedad';
@@ -445,7 +445,7 @@ export class PDFService {
     pdf.setTextColor(80, 80, 80);
     pdf.text(`${typeText} en ${statusText.toLowerCase()}`, margin, yPos);
     yPos += 15;
-    
+
     // Foto
     if (mainImageBase64) {
       try {
@@ -460,13 +460,13 @@ export class PDFService {
         yPos += 40;
       }
     }
-    
+
     // Espacio para plano
     pdf.setDrawColor(200, 200, 200);
     pdf.rect(margin, yPos, contentWidth, 60);
     pdf.setFontSize(12);
     pdf.setTextColor(150, 150, 150);
-    pdf.text('ESPACIO PARA PLANO', margin + (contentWidth/2), yPos + 30, { align: 'center' });
+    pdf.text('ESPACIO PARA PLANO', margin + (contentWidth / 2), yPos + 30, { align: 'center' });
   }
 
   /**
@@ -491,11 +491,12 @@ export class PDFService {
       'sale': 'Venta',
       'rent': 'Alquiler',
       'temporary_rent': 'Alquiler Temporario',
+      'venta_en_pozo': 'Venta en Pozo',
       'sold': 'Vendido',
       'rented': 'Alquilado',
       'reserved': 'Reservado'
     };
-    
+
     return statusMap[status] || status;
   }
 }

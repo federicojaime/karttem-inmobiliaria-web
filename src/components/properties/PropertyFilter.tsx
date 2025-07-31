@@ -30,7 +30,7 @@ export const PropertyFilter = ({ filters, onFilterChange, propertyTypes }: Prope
       acc[key] = '';
       return acc;
     }, {} as Record<string, string>);
-    
+
     setLocalFilters(emptyFilters);
     onFilterChange(emptyFilters);
     setIsOpen(false);
@@ -50,8 +50,8 @@ export const PropertyFilter = ({ filters, onFilterChange, propertyTypes }: Prope
           {isOpen ? 'Ocultar' : 'Mostrar'}
         </Button>
       </div>
-      
-      <form 
+
+      <form
         onSubmit={handleSubmit}
         className={`space-y-4 ${isOpen ? 'block' : 'hidden lg:block'}`}
       >
@@ -73,7 +73,7 @@ export const PropertyFilter = ({ filters, onFilterChange, propertyTypes }: Prope
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           </div>
         </div>
-        
+
         {/* Property Type */}
         <div>
           <label htmlFor="type_id" className="block text-sm font-medium mb-1">
@@ -94,7 +94,7 @@ export const PropertyFilter = ({ filters, onFilterChange, propertyTypes }: Prope
             ))}
           </select>
         </div>
-        
+
         {/* Status */}
         <div>
           <label htmlFor="status" className="block text-sm font-medium mb-1">
@@ -110,9 +110,10 @@ export const PropertyFilter = ({ filters, onFilterChange, propertyTypes }: Prope
             <option value="">Todas</option>
             <option value="sale">Venta</option>
             <option value="rent">Alquiler</option>
+            <option value="venta_en_pozo">Venta en Pozo</option>
           </select>
         </div>
-        
+
         {/* Price ARS Range */}
         <div className="space-y-2">
           <label className="block text-sm font-medium">
@@ -143,7 +144,7 @@ export const PropertyFilter = ({ filters, onFilterChange, propertyTypes }: Prope
             </div>
           </div>
         </div>
-        
+
         {/* Price USD Range */}
         <div className="space-y-2">
           <label className="block text-sm font-medium">
@@ -174,7 +175,7 @@ export const PropertyFilter = ({ filters, onFilterChange, propertyTypes }: Prope
             </div>
           </div>
         </div>
-        
+
         {/* Bedrooms & Bathrooms */}
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -212,7 +213,7 @@ export const PropertyFilter = ({ filters, onFilterChange, propertyTypes }: Prope
             </select>
           </div>
         </div>
-        
+
         {/* City */}
         <div>
           <label htmlFor="city" className="block text-sm font-medium mb-1">
@@ -228,15 +229,15 @@ export const PropertyFilter = ({ filters, onFilterChange, propertyTypes }: Prope
             className="w-full rounded-md border-border px-4 py-2"
           />
         </div>
-        
+
         <div className="flex flex-col space-y-2 pt-4">
           <Button type="submit" className="w-full">
             <Search className="h-4 w-4 mr-2" />
             Aplicar filtros
           </Button>
-          <Button 
-            type="button" 
-            variant="outline" 
+          <Button
+            type="button"
+            variant="outline"
             onClick={resetFilters}
             className="w-full"
           >

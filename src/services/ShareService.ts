@@ -15,7 +15,7 @@ export class ShareService {
     const priceText = getPropertyPrice(property);
     const statusText = this.getStatusText(property.status);
     const typeText = property.type_name || property.type || 'Propiedad';
-    
+
     const text = encodeURIComponent(
       `¡Mira esta ${typeText} en ${statusText.toLowerCase()} en KARTTEM Inmobiliaria!\n\n` +
       `📍 ${property.address}, ${property.city}\n` +
@@ -23,7 +23,7 @@ export class ShareService {
       `${property.description ? property.description.substring(0, 100) + '...\n\n' : ''}` +
       `Más detalles: ${currentUrl}`
     );
-    
+
     window.open(`https://wa.me/?text=${text}`, '_blank');
   }
 
@@ -36,7 +36,7 @@ export class ShareService {
     const priceText = getPropertyPrice(property);
     const statusText = this.getStatusText(property.status);
     const typeText = property.type_name || property.type || 'Propiedad';
-    
+
     const subject = encodeURIComponent(`${typeText} en ${statusText.toLowerCase()} - ${property.address}`);
     const body = encodeURIComponent(
       `¡Mira esta propiedad que encontré en KARTTEM Inmobiliaria!\n\n` +
@@ -51,7 +51,7 @@ export class ShareService {
       `${property.total_area ? '- Superficie total: ' + property.total_area + ' m²\n\n' : '\n'}` +
       `Más detalles: ${currentUrl}`
     );
-    
+
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
   }
 
@@ -99,7 +99,7 @@ export class ShareService {
    */
   static async shareNative(property: Property, currentUrl: string): Promise<boolean> {
     if (!navigator.share) return false;
-    
+
     try {
       const priceText = getPropertyPrice(property);
       await navigator.share({
@@ -113,7 +113,7 @@ export class ShareService {
       return false;
     }
   }
-  
+
   /**
    * Obtiene el texto del estado de la propiedad
    */
@@ -122,11 +122,12 @@ export class ShareService {
       'sale': 'En Venta',
       'rent': 'En Alquiler',
       'temporary_rent': 'Alquiler Temporario',
+      'venta_en_pozo': 'Venta en Pozo',
       'sold': 'Vendido',
       'rented': 'Alquilado',
       'reserved': 'Reservado'
     };
-    
+
     return statusMap[status] || status;
   }
 }

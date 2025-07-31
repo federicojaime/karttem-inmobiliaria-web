@@ -67,6 +67,7 @@ const createMarkerIcon = (color: string) => {
 const markerIcons = {
     sale: createMarkerIcon('#ff0000'), // Rojo para En Venta
     rent: createMarkerIcon('#008080'), // Verde azulado para En Alquiler
+    venta_en_pozo: createMarkerIcon('#ff8c00'), // Naranja para Venta en Pozo
     default: L.icon({
         iconUrl: icon,
         shadowUrl: iconShadow,
@@ -102,7 +103,7 @@ export const PropertyMap = () => {
                     if (propertiesWithCoords.length === 0) {
                         // Tomar solo las propiedades en venta o alquiler
                         const availableProps = response.data
-                            .filter(prop => prop.status === 'sale' || prop.status === 'rent')
+                            .filter(prop => prop.status === 'sale' || prop.status === 'rent' || prop.status === 'venta_en_pozo')
                             .slice(0, 10);
 
                         propertiesWithCoords = availableProps.map((prop) => {
@@ -144,6 +145,7 @@ export const PropertyMap = () => {
             case 'sale': return 'Venta';
             case 'rent': return 'Alquiler';
             case 'temporary_rent': return 'Alquiler temporario';
+            case 'venta_en_pozo': return 'Venta en Pozo';
             default: return status;
         }
     };
@@ -232,7 +234,7 @@ export const PropertyMap = () => {
                                 borderRadius: '4px',
                                 boxShadow: '0 1px 5px rgba(0,0,0,0.2)',
                                 border: '1px solid #ccc',
-                                zIndex: 1001 // Asegurar que esté por encima de otros controles
+                                zIndex: 1001
                             }}
                         >
                             <div className="flex flex-col">
@@ -246,7 +248,7 @@ export const PropertyMap = () => {
                                     }}></div>
                                     <span className="text-xs">En Venta</span>
                                 </div>
-                                <div className="flex items-center">
+                                <div className="flex items-center mb-1">
                                     <div style={{
                                         backgroundColor: '#008080',
                                         width: '12px',
@@ -255,6 +257,16 @@ export const PropertyMap = () => {
                                         marginRight: '8px'
                                     }}></div>
                                     <span className="text-xs">En Alquiler</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <div style={{
+                                        backgroundColor: '#ff8c00',
+                                        width: '12px',
+                                        height: '12px',
+                                        borderRadius: '50%',
+                                        marginRight: '8px'
+                                    }}></div>
+                                    <span className="text-xs">Venta en Pozo</span>
                                 </div>
                             </div>
                         </div>

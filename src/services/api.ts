@@ -10,7 +10,7 @@ export interface Property {
   type: string;
   type_id: number;
   type_name?: string;
-  status: string;
+  status: 'sale' | 'rent' | 'temporary_rent' | 'venta_en_pozo' | 'sold' | 'rented' | 'reserved';
   price_ars: number | null;
   price_usd: number | null;
   covered_area: number;
