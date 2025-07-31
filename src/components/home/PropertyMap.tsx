@@ -25,10 +25,41 @@ const DEFAULT_ZOOM = 12;
 const createMarkerIcon = (color: string) => {
     return L.divIcon({
         className: 'custom-marker',
-        html: `<div style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
-        iconSize: [20, 20],
-        iconAnchor: [10, 10],
-        popupAnchor: [0, -10],
+        html: `
+            <div style="
+                position: relative;
+                width: 30px;
+                height: 45px;
+            ">
+                <div style="
+                    position: absolute;
+                    top: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 30px;
+                    height: 30px;
+                    background-color: ${color};
+                    border-radius: 50% 50% 50% 0;
+                    transform: translateX(-50%) rotate(-45deg);
+                    border: 3px solid white;
+                    box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+                "></div>
+                <div style="
+                    position: absolute;
+                    top: 6px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 10px;
+                    height: 10px;
+                    background-color: white;
+                    border-radius: 50%;
+                    z-index: 1;
+                "></div>
+            </div>
+        `,
+        iconSize: [30, 45],
+        iconAnchor: [15, 45],
+        popupAnchor: [0, -45],
     });
 };
 

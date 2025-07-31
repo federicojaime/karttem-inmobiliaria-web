@@ -1,7 +1,6 @@
-// src/components/common/Footer.tsx - Versión con recarga forzada
-
+// src/components/common/Footer.tsx
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { Facebook, Instagram, Mail, Phone, MapPin, Clock, Smartphone } from 'lucide-react';
 import { Logo } from './Logo';
 import { Button } from '../ui/Button';
 import LogoCodeo from '../../assets/codeo-logo.png';
@@ -55,7 +54,6 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                {/* Usamos <a> en lugar de Link para permitir recargas */}
                 <a 
                   href="/karttem-web/properties?search=true" 
                   className="text-gray-300 hover:text-primary transition-colors"
@@ -76,7 +74,6 @@ export const Footer = () => {
             <h3 className="text-lg font-semibold text-primary mb-4">Servicios</h3>
             <ul className="space-y-2">
               <li>
-                {/* Usamos <a> en lugar de Link para permitir recargas */}
                 <a 
                   href="/karttem-web/properties?status=sale" 
                   className="text-gray-300 hover:text-primary transition-colors"
@@ -86,7 +83,6 @@ export const Footer = () => {
                 </a>
               </li>
               <li>
-                {/* Usamos <a> en lugar de Link para permitir recargas */}
                 <a 
                   href="/karttem-web/properties?status=rent" 
                   className="text-gray-300 hover:text-primary transition-colors"
@@ -117,6 +113,15 @@ export const Footer = () => {
               <li className="flex items-center">
                 <Phone className="h-5 w-5 mr-3 text-primary flex-shrink-0" />
                 <a
+                  href="tel:+542664424950"
+                  className="text-gray-300 hover:text-primary transition-colors"
+                >
+                  +54 266 4424950
+                </a>
+              </li>
+              <li className="flex items-center">
+                <Smartphone className="h-5 w-5 mr-3 text-primary flex-shrink-0" />
+                <a
                   href="#"
                   className="text-gray-300 hover:text-primary transition-colors"
                   onClick={(e) => {
@@ -124,7 +129,7 @@ export const Footer = () => {
                     handleWhatsAppClick();
                   }}
                 >
-                  +54 9 2664 46-3038
+                  +54 9 2664 463038
                 </a>
               </li>
               <li className="flex items-center">
