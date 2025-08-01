@@ -1,4 +1,4 @@
-// src/components/property/PropertyCard.tsx
+// src/components/properties/PropertyCard.tsx
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -18,7 +18,7 @@ interface PropertyCardProps {
         covered_area: string | number;
         total_area?: string | number;
         main_image: string;
-        featured?: number | boolean;
+        featured?: boolean | number;
     };
     index?: number;
     isFavorite?: boolean;
@@ -31,10 +31,41 @@ export const PropertyCard = ({
 }: PropertyCardProps) => {
     const [imageLoaded, setImageLoaded] = useState(false);
 
-    // Función para formatear precio
+    // Función para formatear precio - CORREGIDA
     const formatPrice = (price: string | number | null | undefined) => {
-        if (!price) return '0';
-        return parseFloat(price.toString()).toLocaleString('es-AR');
+        if (!price || price === 0 || price === '0') return null;
+        const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
+        if (numericPrice <= 0) return null;
+        return numericPrice.toLocaleString('es-AR');
+    };
+
+    // Función para obtener el precio formateado - NUEVA LÓGICA
+    const getFormattedPrice = () => {
+        const arsPrice = formatPrice(property.price_ars);
+        const usdPrice = formatPrice(property.price_usd);
+
+        // Priorizar ARS si existe y es > 0
+        if (arsPrice) {
+            return `$${arsPrice}`;
+        } 
+        // Si no hay ARS válido, usar USD
+        else if (usdPrice) {
+            return `USD $${usdPrice}`;
+        }
+        // Si no hay ningún precio válido
+        return 'Consultar';
+    };
+
+    // Función para obtener el precio secundario
+    const getSecondaryPrice = () => {
+        const arsPrice = formatPrice(property.price_ars);
+        const usdPrice = formatPrice(property.price_usd);
+
+        // Solo mostrar precio secundario si AMBOS precios existen y son válidos
+        if (arsPrice && usdPrice) {
+            return `USD $${usdPrice}`;
+        }
+        return null;
     };
 
     // Obtener texto del estado - ACTUALIZADO con venta en pozo
@@ -110,7 +141,7 @@ export const PropertyCard = ({
                     </div>
 
                     {/* Etiqueta destacada */}
-                    {property.featured && (
+                    {property.featured === 1 && (
                         <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1 bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-md">
                             <Star className="h-3 w-3 fill-white" />
                             <span>Destacada</span>
@@ -123,11 +154,11 @@ export const PropertyCard = ({
                     {/* Precio */}
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 mb-3">
                         <div className="font-extrabold text-2xl text-primary">
-                            ${formatPrice(property.price_ars)}
+                            {getFormattedPrice()}
                         </div>
-                        {property.price_usd && (
+                        {getSecondaryPrice() && (
                             <div className="text-sm text-gray-500 font-medium">
-                                USD ${formatPrice(property.price_usd)}
+                                {getSecondaryPrice()}
                             </div>
                         )}
                     </div>
@@ -146,23 +177,23 @@ export const PropertyCard = ({
                     {/* Características */}
                     <div className="pt-3 border-t border-gray-100">
                         <div className="flex flex-wrap justify-between text-gray-600 text-sm gap-4">
-                            {(property.bedrooms !== null && property.bedrooms > 0) && (
+                            {(property.bedrooms !== null && property.bedrooms > 0) ? (
                                 <div className="flex items-center">
                                     <Bed className="h-4 w-4 mr-1 text-amber-800" />
                                     <span>
                                         {property.bedrooms} {property.bedrooms === 1 ? 'Dorm.' : 'Dorms.'}
                                     </span>
                                 </div>
-                            )}
+                            ) : null}
 
-                            {(property.bathrooms !== null && property.bathrooms > 0) && (
+                            {(property.bathrooms !== null && property.bathrooms > 0) ? (
                                 <div className="flex items-center">
                                     <Bath className="h-4 w-4 mr-1 text-amber-800" />
                                     <span>
                                         {property.bathrooms} {property.bathrooms === 1 ? 'Baño' : 'Baños'}
                                     </span>
                                 </div>
-                            )}
+                            ) : null}
 
                             <div className="flex items-center">
                                 <Square className="h-4 w-4 mr-1 text-amber-800" />

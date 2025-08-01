@@ -4,11 +4,6 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MapPin, Bed, Bath, Square, Star } from 'lucide-react';
 
-// Hay dos aproximaciones para resolver este problema:
-
-// OPCIÓN 1: Modificar la interfaz PropertyCardProps para incluir las propiedades isFavorite y onToggleFavorite
-// En src/components/property/PropertyCard.tsx, actualiza la interfaz:
-
 interface PropertyCardProps {
     property: {
         id: number;
@@ -16,17 +11,16 @@ interface PropertyCardProps {
         address: string;
         city: string;
         status: string;
-        price_ars: string | number;
+        price_ars: string | number | null;
         price_usd: string | number | null;
         bedrooms: number | null;
         bathrooms: number | null;
         covered_area: string | number;
         total_area?: string | number;
         main_image: string;
-        featured?: number;
+        featured?: number | boolean;
     };
     index?: number;
-    // Añadir estas nuevas propiedades
     isFavorite?: boolean;
     onToggleFavorite?: (id: number) => void;
 }
@@ -37,18 +31,44 @@ export const PropertyCard = ({
 }: PropertyCardProps) => {
     const [imageLoaded, setImageLoaded] = useState(false);
 
-    // Función para formatear precio
+    // Función para formatear precio - CORREGIDA
     const formatPrice = (price: string | number | null | undefined) => {
-        if (!price) return '0';
+        if (!price || price === 0 || price === '0') return null;
         return parseFloat(price.toString()).toLocaleString('es-AR');
     };
 
-    // Obtener texto del estado
+    // Función para obtener el precio formateado - NUEVA LÓGICA
+    const getFormattedPrice = () => {
+        const arsPrice = formatPrice(property.price_ars);
+        const usdPrice = formatPrice(property.price_usd);
+
+        if (arsPrice && parseFloat(property.price_ars?.toString() || '0') > 0) {
+            return `$${arsPrice}`;
+        } else if (usdPrice && parseFloat(property.price_usd?.toString() || '0') > 0) {
+            return `USD $${usdPrice}`;
+        }
+        return 'Consultar';
+    };
+
+    // Función para obtener el precio secundario
+    const getSecondaryPrice = () => {
+        const arsPrice = formatPrice(property.price_ars);
+        const usdPrice = formatPrice(property.price_usd);
+
+        // Si el precio principal es ARS y también hay USD, mostrar USD como secundario
+        if (arsPrice && parseFloat(property.price_ars?.toString() || '0') > 0 && usdPrice && parseFloat(property.price_usd?.toString() || '0') > 0) {
+            return `USD $${usdPrice}`;
+        }
+        return null;
+    };
+
+    // Obtener texto del estado - ACTUALIZADO con venta en pozo
     const getStatusText = (status: string) => {
         switch (status) {
             case 'sale': return 'En venta';
             case 'rent': return 'En alquiler';
             case 'temporary_rent': return 'Alquiler temporario';
+            case 'venta_en_pozo': return 'Venta en Pozo';
             case 'reserved': return 'Reservada';
             case 'sold': return 'Vendida';
             case 'rented': return 'Alquilada';
@@ -56,12 +76,13 @@ export const PropertyCard = ({
         }
     };
 
-    // Obtener clase de color para el estado
+    // Obtener clase de color para el estado - ACTUALIZADA con venta en pozo
     const getStatusClass = (status: string) => {
         switch (status) {
             case 'sale': return 'bg-amber-400 text-black';
             case 'rent': return 'bg-blue-500 text-white';
             case 'temporary_rent': return 'bg-teal-500 text-white';
+            case 'venta_en_pozo': return 'bg-orange-500 text-white';
             case 'reserved': return 'bg-purple-500 text-white';
             case 'sold': return 'bg-gray-500 text-white';
             case 'rented': return 'bg-gray-500 text-white';
@@ -77,9 +98,7 @@ export const PropertyCard = ({
             return imageUrl;
         }
 
-        //return `http://localhost/inmobiliaria-api/${imageUrl}`;
         return `https://codeo.site/api-karttem/${imageUrl}`;
-
     };
 
     return (
@@ -116,7 +135,7 @@ export const PropertyCard = ({
                     </div>
 
                     {/* Etiqueta destacada */}
-                    {property.featured === 1 && (
+                    {property.featured && (
                         <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1 bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-md">
                             <Star className="h-3 w-3 fill-white" />
                             <span>Destacada</span>
@@ -129,11 +148,11 @@ export const PropertyCard = ({
                     {/* Precio */}
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 mb-3">
                         <div className="font-extrabold text-2xl text-primary">
-                            ${formatPrice(property.price_ars)}
+                            {getFormattedPrice()}
                         </div>
-                        {property.price_usd && (
+                        {getSecondaryPrice() && (
                             <div className="text-sm text-gray-500 font-medium">
-                                USD ${formatPrice(property.price_usd)}
+                                {getSecondaryPrice()}
                             </div>
                         )}
                     </div>
