@@ -13,6 +13,20 @@ import { SharePropertyMenu } from '../components/property/SharePropertyMenu';
 import { PROVINCES } from '../data/locations'; // Importar la lista de provincias
 import { getPropertyPrice } from '../utils/format';
 
+// Definir el tipo para los status de la propiedad
+type PropertyStatus = 'sale' | 'rent' | 'temporary_rent' | 'venta_en_pozo' | 'sold' | 'rented' | 'reserved';
+
+// Mapeo de status a texto legible
+const statusTextMap: Record<PropertyStatus, string> = {
+  'sale': 'Venta',
+  'rent': 'Alquiler',
+  'temporary_rent': 'Alquiler temporario',
+  'venta_en_pozo': 'Venta en Pozo',
+  'sold': 'Vendido',
+  'rented': 'Alquilado',
+  'reserved': 'Reservado'
+};
+
 export const PropertyDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [property, setProperty] = useState<Property | null>(null);
@@ -37,13 +51,10 @@ export const PropertyDetail = () => {
       }
     };
 
-
     if (id) {
       fetchProperty();
     }
   }, [id]);
-
-
 
   if (loading) {
     return (
@@ -81,17 +92,8 @@ export const PropertyDetail = () => {
     );
   }
 
-  // Status text
-  const statusText = {
-    'sale': 'Venta',
-    'rent': 'Alquiler',
-    'temporary_rent': 'Alquiler temporario',
-    'venta_en_pozo': 'Venta en Pozo',
-    'sold': 'Vendido',
-    'rented': 'Alquilado'
-  }[property.status] || property.status;
-
-
+  // Status text - Type-safe con fallback
+  const statusText: string = statusTextMap[property.status as PropertyStatus] || property.status;
 
   // Obtener el nombre legible de la provincia a partir del ID
   const getProvinceName = (provinceId: string) => {

@@ -10,7 +10,7 @@ import { NotFound } from './pages/NotFound';
 import { Contact } from './pages/Contact';
 import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
-import karttemLogo from './assets/karttem-full-logo.png'; // Solo KARTTEM si es necesario
+//import karttemLogo from './assets/karttem-full-logo.png'; // Solo KARTTEM si es necesario
 
 // Componente para manejar el scroll al cambiar de ruta
 const ScrollToTop = () => {
@@ -135,56 +135,28 @@ const CookieConsent = () => {
   );
 };*/
 
-// Componente para la pantalla de carga
-const LoadingScreen = ({ isLoading }: { isLoading: boolean }) => {
-  return (
-    <motion.div
-      className="fixed inset-0 bg-black z-50 flex items-center justify-center"
-      initial={{ opacity: 1 }}
-      animate={{ opacity: isLoading ? 1 : 0 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.8 }}
-      style={{ pointerEvents: isLoading ? 'auto' : 'none' }}
-    >
-      <div className="text-center">
-        <img
-          src={karttemLogo}
-          alt="KARTTEM Inmobiliaria"
-          className="h-16 mx-auto mb-6"
-        />
-        <div className="relative w-64 h-2 bg-gray-700 rounded-full overflow-hidden">
-          <motion.div
-            className="absolute top-0 left-0 h-full bg-amber-500"
-            initial={{ width: 0 }}
-            animate={{ width: "100%" }}
-            transition={{ duration: 2 }}
-          />
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  // Removemos las variables no utilizadas isLoading y LoadingScreen
+  // Si necesitas la funcionalidad de loading screen en el futuro, descomenta estas líneas:
+  // const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Simular tiempo de carga
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2500);
+  // useEffect(() => {
+  //   // Simular tiempo de carga
+  //   const timer = setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 100);
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   return (
     <Router basename="/karttem-web">
       <ScrollToTop />
 
-      {/* Pantalla de carga inicial */}
+      {/* Pantalla de carga inicial - Comentado hasta que se necesite
       <AnimatePresence>
         {isLoading && <LoadingScreen isLoading={isLoading} />}
-      </AnimatePresence>
+      </AnimatePresence>*/}
 
       <div className="flex flex-col min-h-screen bg-gray-50">
         <Navbar />

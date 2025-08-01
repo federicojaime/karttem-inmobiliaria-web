@@ -4,11 +4,6 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MapPin, Bed, Bath, Square, Star } from 'lucide-react';
 
-// Hay dos aproximaciones para resolver este problema:
-
-// OPCIÓN 1: Modificar la interfaz PropertyCardProps para incluir las propiedades isFavorite y onToggleFavorite
-// En src/components/property/PropertyCard.tsx, actualiza la interfaz:
-
 interface PropertyCardProps {
     property: {
         id: number;
@@ -16,17 +11,16 @@ interface PropertyCardProps {
         address: string;
         city: string;
         status: string;
-        price_ars: string | number;
+        price_ars: string | number | null;
         price_usd: string | number | null;
         bedrooms: number | null;
         bathrooms: number | null;
         covered_area: string | number;
         total_area?: string | number;
         main_image: string;
-        featured?: number;
+        featured?: number | boolean;
     };
     index?: number;
-    // Añadir estas nuevas propiedades
     isFavorite?: boolean;
     onToggleFavorite?: (id: number) => void;
 }
@@ -79,9 +73,7 @@ export const PropertyCard = ({
             return imageUrl;
         }
 
-        //return `http://localhost/inmobiliaria-api/${imageUrl}`;
         return `https://codeo.site/api-karttem/${imageUrl}`;
-
     };
 
     return (
@@ -118,7 +110,7 @@ export const PropertyCard = ({
                     </div>
 
                     {/* Etiqueta destacada */}
-                    {property.featured === 1 && (
+                    {property.featured && (
                         <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1 bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-md">
                             <Star className="h-3 w-3 fill-white" />
                             <span>Destacada</span>

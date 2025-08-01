@@ -119,7 +119,24 @@ export const Properties = () => {
                         <>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {properties.map(property => (
-                                    <PropertyCard key={property.id} property={property} />
+                                    <PropertyCard 
+                                        key={property.id} 
+                                        property={{
+                                            id: property.id,
+                                            title: property.title,
+                                            address: property.address,
+                                            city: property.city,
+                                            status: property.status,
+                                            price_ars: property.price_ars,
+                                            price_usd: property.price_usd,
+                                            bedrooms: property.bedrooms,
+                                            bathrooms: property.bathrooms,
+                                            covered_area: property.covered_area,
+                                            total_area: property.total_area,
+                                            main_image: property.main_image || '',
+                                            featured: property.featured
+                                        }}
+                                    />
                                 ))}
                             </div>
 
