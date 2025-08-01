@@ -101,15 +101,6 @@ export const Footer = () => {
                 </a>
               </li>
               <li>
-                <a
-                  href="/karttem-web/properties?status=rent"
-                  className="text-gray-300 hover:text-primary transition-colors"
-                  onClick={(e) => handleQueryParamLink(e, '/karttem-web/properties?status=rent')}
-                >
-                  Alquiler de propiedades
-                </a>
-              </li>
-              <li>
                 <Link to="/contact" className="text-gray-300 hover:text-primary transition-colors">
                   Asesoramiento inmobiliario
                 </Link>
@@ -152,9 +143,8 @@ export const Footer = () => {
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 mr-3 text-primary flex-shrink-0" />
-                <a href="mailto:karttem@gmail.com" className="text-gray-300 hover:text-primary transition-colors">
-                  karttem@gmail.com
-                </a>
+                <a href="mailto:info@karttemsa.com" className="text-gray-300 hover:text-primary transition-colors">
+                  info@karttemsa.com                </a>
               </li>
             </ul>
 
