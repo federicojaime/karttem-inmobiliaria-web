@@ -62,9 +62,18 @@ export const Properties = () => {
                 if (response.ok) {
                     console.log('Propiedades cargadas:', response.data);
 
-                    setProperties(response.data);
+                    // FILTRAR AQUÍ: SOLO mostrar propiedades DISPONIBLES
+                    const filteredProperties = response.data.filter(property => 
+                        property.status === 'sale' ||           // En venta
+                        property.status === 'rent' ||           // En alquiler (disponible)
+                        property.status === 'temporary_rent' || // Alquiler temporario (disponible)
+                        property.status === 'venta_en_pozo' ||  // Venta en pozo
+                        property.status === 'reserved'          // Reservada
+                    );
+
+                    setProperties(filteredProperties);
                     // For pagination - this would be handled differently with a real API that returns pagination info
-                    setTotalPages(Math.ceil(response.data.length / 12));
+                    setTotalPages(Math.ceil(filteredProperties.length / 12));
                 } else {
                     setError(response.msg);
                 }
